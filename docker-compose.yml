@@ -1,0 +1,10 @@
+services:
+  dev:
+    image: node
+    entrypoint: npm
+    command: run serve
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - 8000:8000

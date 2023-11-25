@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+        var gtmCookiesConfig = {
+            display: {
+                mode: "bar", //"modal",
+                wall: true,
+            },
+            styles: {
+                buttons: {
+                    'text-decoration': 'none',
+                    'background-color': '#EEEEEE',
+                    color: '#333333',
+                    padding: '2px 6px 2px 6px',
+                    'border-top': '1px solid #CCCCCC',
+                    'border-right': '1px solid #333333',
+                    'border-bottom': '1px solid #333333',
+                    'border-left': '1px solid #CCCCCC',
+                }
+            },
+            content: {
+                modal: {
+                    title: "Foo",
+                    description: "",
+                    consent_types: [{
+                        name: "ad_storage",
+                        title: "Ads storage",
+                        description: "Enables storage, such as cookies, related to advertising [link](https://www.google.com)",
+                        default: 'denied',
+                        propose: 'granted'
+                    }, {
+                        name: 'analytics_storage',
+                        title: "Analytics storage",
+                        description: 'Enables storage, such as cookies, related to analytics (for example, visit duration)',
+                        default: 'denied',
+                        propose: 'granted'
+                    }, {
+                        name: 'functionality_storage',
+                        title: "Functionality storage",
+                        description: 'Enables storage that supports the functionality of the website or app such as language settings',
+                        default: 'denied',
+                        propose: 'granted'
+                    }, {
+                        name: 'personalization_storage',
+                        title: "Personalization storage",
+                        description: 'Enables storage related to personalization such as video recommendations',
+                        default: 'denied',
+                        propose: 'granted'
+                    }, {
+                        name: 'security_storage',
+                        title: "Security storage",
+                        description: 'Enables storage related to security such as authentication functionality, fraud prevention, and other user protection',
+                        default: 'denied',
+                        propose: 'granted'
+                    }]
+                },
+                bar: {
+
+                }
+            }
+        };
+    </script>
+  </head>
+  <body>
+    <a href="#gtm-cookies-settings">Cookies Settings</a>
+
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

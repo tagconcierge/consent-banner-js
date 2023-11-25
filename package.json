@@ -1,0 +1,15 @@
+{
+  "name": "gtm-cookies-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "esbuild src/app.js --outdir=www/js --bundle --servedir=www"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "0.19.7"
+  }
+}
