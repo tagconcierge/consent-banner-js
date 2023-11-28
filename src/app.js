@@ -1,5 +1,4 @@
 // Utilities
-
 function ready(fn) {
   if (document.readyState != 'loading') {
     fn();
@@ -21,6 +20,15 @@ function applyStyles(el, styles) {
   if (null === el) return;
   for (var key of Object.keys(styles)) {
     el.style[key] = styles[key];
+  }
+}
+
+function JSONtoStyles(rootEl, styles) {
+  for (var param in styles) {
+    const elements = rootEl.querySelectorAll(param);
+    elements.forEach(function(el) {
+      applyStyles(el, styles[param]);
+    });
   }
 }
 
@@ -111,15 +119,12 @@ function createModal(gtmCookiesConfig) {
   var modal = document.createElement("div");
   modal.style.display = 'none';
   modal.setAttribute('id', 'gtm-cookies-modal');
-  modal.innerHTML = '<div style="margin: 0 auto;display: flex;justify-content: center;"><div><p></p></div><div style="margin: 12px;"><a href="#accept"></a><a href="#settings"></a></div></div>';
+  modal.innerHTML = '<div class="gtm-cookies-modal-wrapper"><div><p></p></div><div class="gtm-cookies-modal-buttons"><a class="button" href="#accept"></a><a class="button" href="#settings"></a></div></div>';
   modal.querySelector('p').textContent = applySimpleMarkdown(gtmCookiesConfig.content.modal.text);
   modal.querySelector('[href="#accept"]').textContent = gtmCookiesConfig.content.modal.buttons.accept.text;
   modal.querySelector('[href="#settings"]').textContent = gtmCookiesConfig.content.modal.buttons.settings.text;
   // var modalText = 'Our page is using cookies [accept all](#accept) [adjust settings](#modal).';
   // modal.innerHTML = applySimpleMarkdown(gtmCookiesConfig.content.modal.text);
-  applyStyles(modal.querySelector('[href="#accept"]'), gtmCookiesConfig.styles.buttons);
-  applyStyles(modal.querySelector('[href="#settings"]'), gtmCookiesConfig.styles.buttons);
-  // applyStyles(modal.querySelector('[href="#close"]'), gtmCookiesConfig.styles.buttons);
   return modal;
 }
 
@@ -129,15 +134,13 @@ function createSettings(gtmCookiesConfig) {
   var settings = document.createElement("div");
   settings.setAttribute('id', 'gtm-cookies-settings');
   settings.style.display = 'none';
-  settings.innerHTML = '<div><h2></h2><p></p><form><ul></ul><button></button><a href="#close"></a></form></div>';
+  settings.innerHTML = '<div><h2></h2><p></p><form><ul></ul><a class="button" href="#save"></a><a class="button" href="#close"></a></form></div>';
 
   settings.querySelector('h2').textContent = gtmCookiesConfig.content.settings.title;
   settings.querySelector('p').textContent = gtmCookiesConfig.content.settings.description;
 
-  settings.querySelector('button').textContent = gtmCookiesConfig.content.settings.buttons.save.text;
+  settings.querySelector('[href="#save"]').textContent = gtmCookiesConfig.content.settings.buttons.save.text;
   settings.querySelector('[href="#close"]').textContent = gtmCookiesConfig.content.settings.buttons.close.text;
-  // applyStyles(settings.querySelector('[href="#save"]'), gtmCookiesConfig.styles.buttons);
-  applyStyles(settings.querySelector('[href="#close"]'), gtmCookiesConfig.styles.buttons);
 
   var consentTypes = gtmCookiesConfig.content.settings.consent_types;
   for (var key of Object.keys(consentTypes)) {
@@ -179,7 +182,7 @@ function hideMain(main) {
 
 function showWall(main) {
   var wall = main.querySelector('#gtm-cookies-wall');
-  wall.style.background = 'rgba(255, 255, 128, .5)';
+  wall.style.background = 'rgba(0, 0, 0, .7)';
   wall.style.position = 'absolute';
   wall.style.top = '0';
   wall.style.right = '0';
@@ -189,7 +192,7 @@ function showWall(main) {
 
 function hideWall(main) {
   var wall = main.querySelector('#gtm-cookies-wall');
-  wall.style.position = 'relative';
+  wall.style.position = 'static';
   wall.style.background = 'none';
 }
 
@@ -206,11 +209,13 @@ function hideModal(main) {
 function showSettings(main) {
   main.style.display = 'block';
   main.querySelector('#gtm-cookies-settings').style.display = 'block';
+  showWall(main)
 }
 
 function hideSettings(main) {
   main.style.display = 'block';
   main.querySelector('#gtm-cookies-settings').style.display = 'none';
+  hideWall(main)
 }
 
 
@@ -226,6 +231,39 @@ function grantAllConsentTypes() {
 
 
 function app() {
+  const defaultStyles = {
+    '#gtm-cookies-modal .gtm-cookies-modal-wrapper': {
+      margin: '0 auto',
+      display: 'flex',
+      'justify-content': 'center'
+    },
+    '#gtm-cookies-modal .gtm-cookies-modal-buttons': {
+      margin: '12px'
+    },
+    '#gtm-cookies-settings': {
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      // border: '1px solid rgba(0, 0, 0, 0.8)',
+      background: '#fff',
+      'box-shadow': '0 0 10px 10px rgba(0, 0, 0, .1)',
+      'border-radius': '5px',
+      padding: '10px 20px 30px'
+    },
+    '#gtm-cookies-settings': {
+
+    },
+    '.button': {
+        'text-decoration': 'none',
+        background: 'none',
+        color: '#333333',
+        padding: '2px 6px 2px 6px',
+        'border': '1px solid #000',
+        margin: '0 5px'
+    }
+  };
+
   var body = document.querySelector('body');
 
   // create all components
@@ -255,13 +293,22 @@ function app() {
   settings.querySelector('[href="#close"]').addEventListener('click', function(ev) {
     ev.preventDefault();
     hideSettings(main);
+    if (!isConsentStateProvided()) {
+      showModal(main);
+    }
   });
 
   modal.querySelector('[href="#settings"]').addEventListener('click', function(ev) {
     ev.preventDefault();
+    hideModal(main);
     showSettings(main);
   });
 
+
+  settings.querySelector('[href="#save"]').addEventListener('click', function(ev) {
+    ev.preventDefault();
+    settings.querySelector('form').submit();
+  });
 
   settings.querySelector('form').addEventListener("submit", function(ev) {
     ev.preventDefault();
@@ -283,14 +330,7 @@ function app() {
 
   body.appendChild(main);
 
-  applyStyles(settings, {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    'border': '1px solid black',
-    background: "#fff"
-  });
+  JSONtoStyles(main, defaultStyles);
 
   if (true !== isConsentStateProvided()) {
     if (true === gtmCookiesConfig.display.wall) {
@@ -311,6 +351,7 @@ function app() {
     if ('modal' === gtmCookiesConfig.display.mode) {
       applyStyles(modal, {
         position: 'fixed',
+        padding: '30px',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',

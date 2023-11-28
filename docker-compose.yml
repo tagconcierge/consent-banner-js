@@ -1,10 +1,10 @@
 services:
   dev:
     image: node
-    entrypoint: npm
-    command: run serve
-    working_dir: /app
+    entrypoint:
+    command: npm run serve
     volumes:
-      - ./:/app
+      - .:$PWD
+    working_dir: $PWD # in order to eslint work together with local editor
     ports:
       - 8000:8000
