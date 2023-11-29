@@ -1,66 +1,100 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <style type="text/css">
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+    </style>
     <script>
         var gtmCookiesConfig = {
             display: {
-                mode: "modal"
-                wall: true,
+                mode: "modal",
+                wall: true
             },
-            content: {
-                settings: {
-                    title: "Foo",
-                    description: "",
-                    consent_types: [{
-                        name: "ad_storage",
-                        title: "Ads storage",
-                        description: "Enables storage, such as cookies, related to advertising [link](https://www.google.com)",
-                        default: 'denied',
-                        propose: 'denied'
-                    }, {
-                        name: 'analytics_storage',
-                        title: "Analytics storage",
-                        description: 'Enables storage, such as cookies, related to analytics (for example, visit duration)',
-                        default: 'denied',
-                        propose: 'granted'
-                    }, {
-                        name: 'functionality_storage',
-                        title: "Functionality storage",
-                        description: 'Enables storage that supports the functionality of the website or app such as language settings',
-                        default: 'denied',
-                        propose: 'granted'
-                    }, {
-                        name: 'personalization_storage',
-                        title: "Personalization storage",
-                        description: 'Enables storage related to personalization such as video recommendations',
-                        default: 'denied',
-                        propose: 'granted'
-                    }, {
-                        name: 'security_storage',
-                        title: "Security storage",
-                        description: 'Enables storage related to security such as authentication functionality, fraud prevention, and other user protection',
-                        default: 'denied',
-                        propose: 'granted'
-                    }],
-                    buttons: {
-                        save: {
-                            text: "Zapisz ustawienia"
-                        },
-                        close: {
-                            text: "Zamknij"
-                        },
-                    }
+            styles: {
+                '#gtm-cookies-modal': {
+                    background: '#fff',
+                    'border': '1px solid black',
+                    background: "#fff",
+                    padding: '30px',
                 },
-                modal: {
-                    text: 'Wykorzystujemy pliki cookies. Dowiedz się więcej i dostosuj swoje preferencje w ustawieniach.',
-                    buttons: {
-                        accept: {
-                            text: 'Akceptuj'
-                        },
-                        settings: {
-                            text: 'Ustawienia'
-                        }
-                    }
+                '#gtm-cookies-modal .gtm-cookies-modal-wrapper': {
+                  margin: '0 auto',
+                  display: 'flex',
+                  'justify-content': 'center'
+                },
+                '#gtm-cookies-modal .gtm-cookies-modal-buttons': {
+                  margin: '12px'
+                },
+                '#gtm-cookies-settings': {
+                  position: 'fixed',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  // border: '1px solid rgba(0, 0, 0, 0.8)',
+                  background: '#fff',
+                  'box-shadow': '0 0 10px 10px rgba(0, 0, 0, .1)',
+                  'border-radius': '5px',
+                  padding: '10px 20px 30px'
+                },
+                '#gtm-cookies-settings ul': {
+                  'list-style': 'none'
+                },
+                '.button': {
+                    'text-decoration': 'none',
+                    background: 'none',
+                    color: '#333333',
+                    padding: '2px 6px 2px 6px',
+                    'border': '1px solid #000',
+                    margin: '0 5px'
+                }
+            },
+            consent_types: [{
+                name: "ad_storage",
+                title: "Ads storage",
+                description: "Enables storage, such as cookies, related to advertising [link](https://www.google.com)",
+                default: 'denied',
+                propose: 'denied'
+            }, {
+                name: 'analytics_storage',
+                title: "Analytics storage",
+                description: 'Enables storage, such as cookies, related to analytics (for example, visit duration)',
+                default: 'denied',
+                propose: 'granted'
+            }, {
+                name: 'functionality_storage',
+                title: "Functionality storage",
+                description: 'Enables storage that supports the functionality of the website or app such as language settings',
+                default: 'denied',
+                propose: 'granted'
+            }, {
+                name: 'personalization_storage',
+                title: "Personalization storage",
+                description: 'Enables storage related to personalization such as video recommendations',
+                default: 'denied',
+                propose: 'granted'
+            }, {
+                name: 'security_storage',
+                title: "Security storage",
+                description: 'Enables storage related to security such as authentication functionality, fraud prevention, and other user protection',
+                default: 'denied',
+                propose: 'granted'
+            }],
+            settings: {
+                title: "Cookies Settings",
+                description: "In order to provide you with best experience we use various...",
+                buttons: {
+                    save: "Zapisz ustawienia",
+                    close: "Zamknij"
+                }
+            },
+            modal: {
+                title: 'Cookies',
+                description: 'Wykorzystujemy pliki cookies. Dowiedz się więcej i dostosuj swoje preferencje w ustawieniach.',
+                buttons: {
+                    accept: 'Akceptuj',
+                    settings: 'Ustawienia'
                 }
             }
         };
