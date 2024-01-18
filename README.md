@@ -2,7 +2,7 @@
 
 > <p align="center">A zero-dependency, lightweight (~1.9kB), consent platform agnostic, cookie banner for any website.</p>
 
-![Consent Banner as a bottom bar](assets/banner-example-bar.png "Consent Banner Example")
+![Consent Banner as a bottom bar](assets/banner-example-modal.png "Consent Banner Example")
 
 ## Get started
 
