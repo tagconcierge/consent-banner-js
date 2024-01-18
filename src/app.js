@@ -44,46 +44,41 @@ function applySimpleMarkdown(text) {
 
 // State Management
 function isConsentStateProvided() {
-  return null !== localStorage.getItem('tag_concierge_consents');
+  var consentState = loadConsentState();
+  return null !== consentState;
 }
 
 function loadConsentState() {
-  var value = localStorage.getItem('tag_concierge_consents');
-  if (null !== value) {
-    return JSON.parse(value);
-  }
+  console.warn("ConsentBannerJS: loadConsentState function is not provided");
   return null;
 }
 
-function pushConsentState(consentState) {
-  window.dataLayer = window.dataLayer || [];
-  dataLayer.push({
-    event: 'tag_concierge_consent',
-    consent_state: consentState
-  });
+function saveConsentState(consentState) {
+  console.warn("ConsentBannerJS: saveConsentState function is not provided");
+  return null;
 }
 
 // Components
 function createMain(gtmCookiesConfig) {
   var main = document.createElement("div");
-  main.setAttribute('id', 'gtm-cookies-main');
+  main.setAttribute('id', 'consent-banner-js-main');
   main.style.display = 'none';
   return main;
 }
 
 function createWall(gtmCookiesConfig) {
   var wall = document.createElement("div");
-  wall.setAttribute('id', 'gtm-cookies-wall');
+  wall.setAttribute('id', 'consent-banner-js-wall');
   return wall;
 }
 
 function createModal(config) {
   var modal = document.createElement("div");
   modal.style.display = 'none';
-  modal.setAttribute('id', 'gtm-cookies-modal');
-  modal.innerHTML = '<div class="gtm-cookies-modal-wrapper"><div><h2></h2><p></p></div><div class="gtm-cookies-modal-buttons"><a class="button" href="#accept"></a><a class="button" href="#settings"></a></div></div>';
+  modal.setAttribute('id', 'consent-banner-js-modal');
+  modal.innerHTML = '<div class="consent-banner-js-modal-wrapper"><div><h2></h2><p></p></div><div class="consent-banner-js-modal-buttons"><a class="button" href="#accept"></a><a class="button" href="#settings"></a></div></div>';
   modal.querySelector('h2').textContent = config.modal.title;
-  modal.querySelector('p').textContent = applySimpleMarkdown(config.modal.description);
+  modal.querySelector('p').innerHTML = applySimpleMarkdown(config.modal.description);
   modal.querySelector('[href="#accept"]').textContent = config.modal.buttons.accept;
   modal.querySelector('[href="#settings"]').textContent = config.modal.buttons.settings;
   return modal;
@@ -91,11 +86,12 @@ function createModal(config) {
 
 function createSettings(config) {
   var existingConsentState = loadConsentState();
+  var isConsentProvided = isConsentStateProvided();
 
   var settings = document.createElement("div");
-  settings.setAttribute('id', 'gtm-cookies-settings');
+  settings.setAttribute('id', 'consent-banner-js-settings');
   settings.style.display = 'none';
-  settings.innerHTML = '<div><h2></h2><p></p><form><ul></ul><a class="button" href="#save"></a><a class="button" href="#close"></a></form></div>';
+  settings.innerHTML = '<div><h2></h2><p></p><form><ul></ul><div class="consent-banner-js-settings-buttons"><a class="button" href="#save"></a><a class="button" href="#close"></a></div></form></div>';
 
   settings.querySelector('h2').textContent = config.settings.title;
   settings.querySelector('p').textContent = applySimpleMarkdown(config.settings.description);
@@ -118,8 +114,8 @@ function createSettings(config) {
     listItemCheckbox.setAttribute('value', 'granted');
     listItemCheckbox.setAttribute('id', consentTypes[key].name);
 
-    if (isConsentStateProvided() && 'granted' === existingConsentState[key]
-      || !isConsentStateProvided() && 'granted' === consentTypes[key].default) {
+    if (isConsentProvided && 'granted' === existingConsentState[consentTypes[key].name]
+      || !isConsentProvided && 'granted' === consentTypes[key].default) {
       listItemCheckbox.setAttribute('checked', 'checked');
     }
 
@@ -144,7 +140,7 @@ function hideMain(main) {
 }
 
 function showWall(main) {
-  var wall = main.querySelector('#gtm-cookies-wall');
+  var wall = main.querySelector('#consent-banner-js-wall');
   wall.style.background = 'rgba(0, 0, 0, .7)';
   wall.style.position = 'absolute';
   wall.style.top = '0';
@@ -154,42 +150,42 @@ function showWall(main) {
 }
 
 function hideWall(main) {
-  var wall = main.querySelector('#gtm-cookies-wall');
+  var wall = main.querySelector('#consent-banner-js-wall');
   wall.style.position = 'static';
   wall.style.background = 'none';
 }
 
 function showModal(main) {
   main.style.display = 'block';
-  main.querySelector('#gtm-cookies-modal').style.display = 'block';
+  main.querySelector('#consent-banner-js-modal').style.display = 'block';
 }
 
 function hideModal(main) {
   main.style.display = 'block';
-  main.querySelector('#gtm-cookies-modal').style.display = 'none';
+  main.querySelector('#consent-banner-js-modal').style.display = 'none';
 }
 
 function showSettings(main) {
   main.style.display = 'block';
-  main.querySelector('#gtm-cookies-settings').style.display = 'block';
+  main.querySelector('#consent-banner-js-settings').style.display = 'block';
   showWall(main)
 }
 
 function hideSettings(main) {
   main.style.display = 'block';
-  main.querySelector('#gtm-cookies-settings').style.display = 'none';
+  main.querySelector('#consent-banner-js-settings').style.display = 'none';
   hideWall(main)
 }
 
 
-function gtmCookies() {
+function consentBannerJsMain(config) {
   var body = document.querySelector('body');
 
   // create all components
-  var main = createMain(gtmCookiesConfig);
-  var wall = createWall(gtmCookiesConfig);
-  var modal = createModal(gtmCookiesConfig);
-  var settings = createSettings(gtmCookiesConfig);
+  var main = createMain(config);
+  var wall = createWall(config);
+  var modal = createModal(config);
+  var settings = createSettings(config);
 
   main.appendChild(wall);
   wall.appendChild(modal);
@@ -199,13 +195,13 @@ function gtmCookies() {
   // apply actions
   main.querySelector('[href="#accept"]').addEventListener('click', function(ev) {
     ev.preventDefault();
-    var consentTypes = gtmCookiesConfig.consent_types;
+    var consentTypes = config.consent_types;
     var consentState = {};
     for (var key of Object.keys(consentTypes || {})) {
       var consentTypeName = consentTypes[key].name;
       consentState[consentTypeName] = 'granted';
     }
-    pushConsentState(consentState);
+    saveConsentState(consentState);
     hideMain(main);
   });
 
@@ -226,7 +222,7 @@ function gtmCookies() {
 
   settings.querySelector('[href="#save"]').addEventListener('click', function(ev) {
     ev.preventDefault();
-    settings.querySelector('form').submit();
+    settings.querySelector('form').requestSubmit();
   });
 
   settings.querySelector('form').addEventListener("submit", function(ev) {
@@ -234,11 +230,11 @@ function gtmCookies() {
     const formData = new FormData(ev.target);
 
     consentState = Object.fromEntries(formData);
-    pushConsentState(consentState);
+    saveConsentState(consentState);
     hideMain(main);
   });
 
-  var settingsButton = body.querySelector('[href="#gtm-cookies-settings"]');
+  var settingsButton = body.querySelector('[href="#consent-banner-js-settings"]');
   if (null !== settingsButton) {
     settingsButton.addEventListener('click', function(ev) {
       ev.preventDefault();
@@ -248,14 +244,14 @@ function gtmCookies() {
 
   body.appendChild(main);
 
-  JSONtoStyles(main, gtmCookiesConfig.styles);
+  JSONtoStyles(main, config.styles);
 
   if (true !== isConsentStateProvided()) {
-    if (true === gtmCookiesConfig.display.wall) {
+    if (true === config.display.wall) {
       showWall(main);
     }
 
-    if ('bar' === gtmCookiesConfig.display.mode) {
+    if ('bar' === config.display.mode) {
       applyStyles(modal, {
         position: 'absolute',
         bottom: 0,
@@ -269,27 +265,38 @@ function gtmCookies() {
       applyStyles(modal.querySelector('h2'), {
         display: 'none'
       });
+
+      applyStyles(modal.querySelector('.consent-banner-js-modal-buttons'), {
+        'margin-left': '20px'
+      });
       showModal(main);
     }
 
-    if ('modal' === gtmCookiesConfig.display.mode) {
+    if ('modal' === config.display.mode) {
       applyStyles(modal, {
         position: 'fixed',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
       });
-      applyStyles(modal.querySelector('.gtm-cookies-modal-wrapper'), {
+      applyStyles(modal.querySelector('.consent-banner-js-modal-wrapper'), {
         display: 'block'
       });
       showModal(main);
     }
 
-    if ('settings' === gtmCookiesConfig.display.mode) {
+    if ('settings' === config.display.mode) {
       showSettings(main);
     }
   }
 
 }
-ready(gtmCookies);
+
+window.cookiesBannerJs = function(overrideLoadConsentState, overrideSaveConsentState, config) {
+  loadConsentState = overrideLoadConsentState;
+  saveConsentState = overrideSaveConsentState;
+  ready(consentBannerJsMain.bind(null, config));
+}
+
+
 

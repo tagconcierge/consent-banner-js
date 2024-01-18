@@ -1,15 +1,15 @@
 {
-  "name": "gtm-cookies-js",
+  "name": "cookies-banner-js",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "esbuild src/app.js --outdir=www/js --bundle --servedir=www --target=es6",
-    "build": "esbuild src/app.js --outfile=dist/gtm-cookies.js --bundle  --target=es6 --minify"
+    "build": "esbuild src/app.js --outfile=dist/consent-banner.min.js --bundle  --target=es6 --minify"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "esbuild": "0.19.7"
   }
