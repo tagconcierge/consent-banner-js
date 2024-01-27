@@ -43,8 +43,7 @@ function applySimpleMarkdown(text) {
 }
 
 // State Management
-function isConsentStateProvided() {
-  var consentState = loadConsentState();
+function isConsentStateProvided(consentState) {
   return null !== consentState;
 }
 
@@ -84,9 +83,8 @@ function createModal(config) {
   return modal;
 }
 
-function createSettings(config) {
-  var existingConsentState = loadConsentState();
-  var isConsentProvided = isConsentStateProvided();
+function createSettings(config, existingConsentState) {
+  var isConsentProvided = isConsentStateProvided(existingConsentState);
 
   var settings = document.createElement("div");
   settings.setAttribute('id', 'consent-banner-js-settings');
@@ -94,7 +92,7 @@ function createSettings(config) {
   settings.innerHTML = '<div><h2></h2><p></p><form><ul></ul><div class="consent-banner-js-settings-buttons"><a class="button" href="#save"></a><a class="button" href="#close"></a></div></form></div>';
 
   settings.querySelector('h2').textContent = config.settings.title;
-  settings.querySelector('p').textContent = applySimpleMarkdown(config.settings.description);
+  settings.querySelector('p').innerHTML = applySimpleMarkdown(config.settings.description);
 
   settings.querySelector('[href="#save"]').textContent = config.settings.buttons.save;
   settings.querySelector('[href="#close"]').textContent = config.settings.buttons.close;
@@ -142,7 +140,7 @@ function hideMain(main) {
 function showWall(main) {
   var wall = main.querySelector('#consent-banner-js-wall');
   wall.style.background = 'rgba(0, 0, 0, .7)';
-  wall.style.position = 'absolute';
+  wall.style.position = 'fixed';
   wall.style.top = '0';
   wall.style.right = '0';
   wall.style.left = '0';
@@ -181,11 +179,13 @@ function hideSettings(main) {
 function consentBannerJsMain(config) {
   var body = document.querySelector('body');
 
+  var existingConsentState = loadConsentState();
+
   // create all components
   var main = createMain(config);
   var wall = createWall(config);
   var modal = createModal(config);
-  var settings = createSettings(config);
+  var settings = createSettings(config, existingConsentState);
 
   main.appendChild(wall);
   wall.appendChild(modal);
@@ -208,7 +208,7 @@ function consentBannerJsMain(config) {
   settings.querySelector('[href="#close"]').addEventListener('click', function(ev) {
     ev.preventDefault();
     hideSettings(main);
-    if (!isConsentStateProvided()) {
+    if (!isConsentStateProvided(existingConsentState)) {
       showModal(main);
     }
   });
@@ -246,14 +246,14 @@ function consentBannerJsMain(config) {
 
   JSONtoStyles(main, config.styles);
 
-  if (true !== isConsentStateProvided()) {
+  if (true !== isConsentStateProvided(existingConsentState)) {
     if (true === config.display.wall) {
       showWall(main);
     }
 
     if ('bar' === config.display.mode) {
       applyStyles(modal, {
-        position: 'absolute',
+        position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
