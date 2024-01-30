@@ -6,11 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "esbuild src/app.js --outdir=www/js --bundle --servedir=www --target=es6",
-    "build": "esbuild src/app.js --outfile=dist/consent-banner.min.js --bundle  --target=es6 --minify"
+    "build": "rimraf dist; esbuild src/app.js --outfile=dist/consent-banner-js/consent-banner.min.js --bundle  --target=es6 --minify; cpr styles/ dist/consent-banner-js/styles"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "0.19.7"
+    "cpr": "^3.0.1",
+    "esbuild": "0.19.7",
+    "rimraf": "^5.0.5"
   }
 }
