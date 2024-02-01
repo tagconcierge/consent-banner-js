@@ -25,6 +25,7 @@ function applyStyles(el, styles) {
 
 function JSONtoStyles(rootEl, styles) {
   for (var param in styles) {
+    const selector = param.replace(/([A-Z])/g, '-$1');
     const elements = rootEl.querySelectorAll(param);
     elements.forEach(function(el) {
       applyStyles(el, styles[param]);
