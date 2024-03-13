@@ -32,16 +32,54 @@ To make that work you need to prepare **three** things:
 2. A function to do something when the user provides their consent, for instance save it in `localStorage` (see [examples](#examples))
 3. A config object that contains complete configuration for the whole thing (see [examples](#examples))
 
+
+## Config Object
+
+
+```js
+{
+    display: {
+        mode: 'modal|bar',
+        wall: true
+    },
+    consent_types: [{
+        name: '',
+        title: '',
+        description: '',
+        default: 'denied|granted'
+    }],
+    settings: {
+        title: '',
+        description: '',
+        buttons: {
+            save: '',
+            close: ''
+        }
+    },
+    modal: {
+        title: '',
+        description: '',
+        buttons: {
+            accept: '',
+            settings: ''
+        }
+    },
+    styles: {} // optional JSON object with styles
+}
+```
+
 ## Styling
 
 The goal for this project was to have one, single JS file to drop "somewhere" on a page and be done with minimal consent UI.
-For the sake of simplicity it does not include any defaults, no default content and no default styles except some core CSS properties to drive the displaying the elements.
+For the sake of simplicity it does not include any defaults, no default content and no default styles except some core CSS properties to drive displaying elements.
 
-That said we added a CSS file that can serve as a way to quickly apply some resonable style before you provide your own:
+That said it comes with few set of styles. They can be applied as CSS that you can drop like this:
 
 `<link rel="stylesheet" type="text/css" href="https://public-assets.tagconcierge.com/cookies-banner-js/styles/light.css">`
 
-A little extreme thing we did is to allow styling via JSON config file. It accepts parameter key as CSS selector and value which is an object of CSS properties and their final values. Please see [examples](#examples) (it is the fourth time I'm referring to them and I'm only on the line 37th so I hope they help).
+Or we allow to apply same styles in JS using JSON config file. It accepts parameter key as CSS selector and value which is an object of CSS properties and their final values.
+
+[light.json](./styles/light.json)
 
 ## Examples
 
@@ -64,6 +102,10 @@ There is a cool way to do it with Workers@Edge for instance CloudFlare Workers t
 We like docker so that's how get local dev server:
 
 `docker-compose up -d dev`
+
+Before we need to install npm package:
+
+`docker-compose run dev npm i`
 
 And if we need `node` we get into the a shell like that:
 

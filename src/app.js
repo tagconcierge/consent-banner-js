@@ -40,7 +40,23 @@ function applySimpleMarkdown(text) {
     .replace(/\_\_\s?([^\n]+)\_\_/g, '<b>$1</b>')
     .replace(/\*\s?([^\n]+)\*/g, '<i>$1</i>')
     .replace(/\_\s?([^\n]+)\_/g, '<i>$1</i>');
+}
 
+function createAndApplyButton(name, text, parent) {
+  if (text === undefined || text === null || text === '') {
+    return;
+  }
+  var btn = document.createElement('a');
+  btn.setAttribute('href', '#' + name);
+  btn.classList.add('consent-banner-button');
+  btn.textContent = text;
+  parent.appendChild(btn);
+}
+
+function addEventListener(elements, event, callback) {
+  elements
+    .filter(e => e !== null)
+    .forEach(el => el.addEventListener(event, callback));
 }
 
 // State Management
@@ -61,26 +77,27 @@ function saveConsentState(consentState) {
 // Components
 function createMain(gtmCookiesConfig) {
   var main = document.createElement("div");
-  main.setAttribute('id', 'consent-banner-js-main');
+  main.setAttribute('id', 'consent-banner-main');
   main.style.display = 'none';
   return main;
 }
 
 function createWall(gtmCookiesConfig) {
   var wall = document.createElement("div");
-  wall.setAttribute('id', 'consent-banner-js-wall');
+  wall.setAttribute('id', 'consent-banner-wall');
   return wall;
 }
 
 function createModal(config) {
   var modal = document.createElement("div");
   modal.style.display = 'none';
-  modal.setAttribute('id', 'consent-banner-js-modal');
-  modal.innerHTML = '<div class="consent-banner-js-modal-wrapper"><div><h2></h2><p></p></div><div class="consent-banner-js-modal-buttons"><a class="button" href="#accept"></a><a class="button" href="#settings"></a></div></div>';
+  modal.setAttribute('id', 'consent-banner-modal');
+  modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><h2></h2><p></p></div><div class="consent-banner-modal-buttons"><a class="consent-banner-button" href="#settings"></a><a class="consent-banner-button" href="#reject"></a><a class="consent-banner-button" href="#accept"></a></div></div>';
   modal.querySelector('h2').textContent = config.modal.title;
   modal.querySelector('p').innerHTML = applySimpleMarkdown(config.modal.description);
   modal.querySelector('[href="#accept"]').textContent = config.modal.buttons.accept;
   modal.querySelector('[href="#settings"]').textContent = config.modal.buttons.settings;
+  modal.querySelector('[href="#reject"]').textContent = config.modal.buttons.reject;
   return modal;
 }
 
@@ -88,15 +105,17 @@ function createSettings(config, existingConsentState) {
   var isConsentProvided = isConsentStateProvided(existingConsentState);
 
   var settings = document.createElement("div");
-  settings.setAttribute('id', 'consent-banner-js-settings');
+  settings.setAttribute('id', 'consent-banner-settings');
   settings.style.display = 'none';
-  settings.innerHTML = '<div><h2></h2><p></p><form><ul></ul><div class="consent-banner-js-settings-buttons"><a class="button" href="#save"></a><a class="button" href="#close"></a></div></form></div>';
+  settings.innerHTML = '<div><form><h2></h2><div><p></p><ul></ul></div><div class="consent-banner-settings-buttons"><a class="consent-banner-button" href="#reject"></a><a class="consent-banner-button" href="#save"></a><a class="consent-banner-button" href="#accept"></a></div></form></div>';
 
   settings.querySelector('h2').textContent = config.settings.title;
   settings.querySelector('p').innerHTML = applySimpleMarkdown(config.settings.description);
 
   settings.querySelector('[href="#save"]').textContent = config.settings.buttons.save;
-  settings.querySelector('[href="#close"]').textContent = config.settings.buttons.close;
+  //settings.querySelector('[href="#close"]').textContent = config.settings.buttons.close;
+  settings.querySelector('[href="#accept"]').textContent = config.settings.buttons.accept;
+  settings.querySelector('[href="#reject"]').textContent = config.settings.buttons.reject;
 
   var consentTypes = config.consent_types;
   for (var key of Object.keys(consentTypes || {})) {
@@ -118,6 +137,17 @@ function createSettings(config, existingConsentState) {
       listItemCheckbox.setAttribute('checked', 'checked');
     }
 
+    if (isConsentProvided && 'denied' === existingConsentState[consentTypes[key].name]
+      || !isConsentProvided && 'denied' === consentTypes[key].default) {
+      listItemCheckbox.removeAttribute('checked');
+    }
+
+    if (consentTypes[key].default === 'required') {
+      listItemCheckbox.setAttribute('checked', 'checked');
+      listItemCheckbox.setAttribute('disabled', 'disabled');
+      listItemHidden.setAttribute('value', 'granted');
+    }
+
     listItemTitle.textContent = consentTypes[key].title;
     listItemTitle.setAttribute('for', consentTypes[key].name);
     listItemDescription.innerHTML = applySimpleMarkdown(consentTypes[key].description);
@@ -127,9 +157,28 @@ function createSettings(config, existingConsentState) {
     listItem.appendChild(listItemDescription);
     settings.querySelector('ul').appendChild(listItem);
   }
-
-
   return settings;
+}
+
+function updateSettings(settings, config, existingConsentState) {
+  var isConsentProvided = isConsentStateProvided(existingConsentState);
+  var consentTypes = config.consent_types;
+  for (var key of Object.keys(consentTypes || {})) {
+    var listItemCheckbox = settings.querySelector('[type="checkbox"][name="'+consentTypes[key].name+'"]');
+    if (isConsentProvided && 'granted' === existingConsentState[consentTypes[key].name]
+      || !isConsentProvided && 'granted' === consentTypes[key].default) {
+      listItemCheckbox.setAttribute('checked', 'checked');
+    }
+    if (isConsentProvided && 'denied' === existingConsentState[consentTypes[key].name]
+      || !isConsentProvided && 'denied' === consentTypes[key].default) {
+      listItemCheckbox.removeAttribute('checked');
+    }
+
+    if (consentTypes[key].default === 'required') {
+      listItemCheckbox.setAttribute('checked', 'checked');
+      listItemCheckbox.setAttribute('disabled', 'disabled');
+    }
+  }
 }
 
 
@@ -139,7 +188,7 @@ function hideMain(main) {
 }
 
 function showWall(main) {
-  var wall = main.querySelector('#consent-banner-js-wall');
+  var wall = main.querySelector('#consent-banner-wall');
   wall.style.background = 'rgba(0, 0, 0, .7)';
   wall.style.position = 'fixed';
   wall.style.top = '0';
@@ -149,30 +198,30 @@ function showWall(main) {
 }
 
 function hideWall(main) {
-  var wall = main.querySelector('#consent-banner-js-wall');
+  var wall = main.querySelector('#consent-banner-wall');
   wall.style.position = 'static';
   wall.style.background = 'none';
 }
 
 function showModal(main) {
   main.style.display = 'block';
-  main.querySelector('#consent-banner-js-modal').style.display = 'block';
+  main.querySelector('#consent-banner-modal').style.display = 'block';
 }
 
 function hideModal(main) {
   main.style.display = 'block';
-  main.querySelector('#consent-banner-js-modal').style.display = 'none';
+  main.querySelector('#consent-banner-modal').style.display = 'none';
 }
 
 function showSettings(main) {
   main.style.display = 'block';
-  main.querySelector('#consent-banner-js-settings').style.display = 'block';
+  main.querySelector('#consent-banner-settings').style.display = 'block';
   showWall(main)
 }
 
 function hideSettings(main) {
   main.style.display = 'block';
-  main.querySelector('#consent-banner-js-settings').style.display = 'none';
+  main.querySelector('#consent-banner-settings').style.display = 'none';
   hideWall(main)
 }
 
@@ -194,7 +243,7 @@ function consentBannerJsMain(config) {
 
 
   // apply actions
-  main.querySelector('[href="#accept"]').addEventListener('click', function(ev) {
+  settings.querySelector('[href="#accept"]').addEventListener('click', function(ev) {
     ev.preventDefault();
     var consentTypes = config.consent_types;
     var consentState = {};
@@ -202,22 +251,66 @@ function consentBannerJsMain(config) {
       var consentTypeName = consentTypes[key].name;
       consentState[consentTypeName] = 'granted';
     }
+    updateSettings(settings, config, consentState);
     saveConsentState(consentState);
     hideMain(main);
+    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
+  });
+  modal.querySelector('[href="#accept"]').addEventListener('click', function(ev) {
+    ev.preventDefault();
+    var consentTypes = config.consent_types;
+    var consentState = {};
+    for (var key of Object.keys(consentTypes || {})) {
+      var consentTypeName = consentTypes[key].name;
+      consentState[consentTypeName] = 'granted';
+    }
+    updateSettings(settings, config, consentState);
+    saveConsentState(consentState);
+    hideMain(main);
+    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
   });
 
-  settings.querySelector('[href="#close"]').addEventListener('click', function(ev) {
+  /*settings.querySelector('[href="#close"]').addEventListener('click', function(ev) {
     ev.preventDefault();
     hideSettings(main);
     if (!isConsentStateProvided(existingConsentState)) {
       showModal(main);
     }
-  });
+  });*/
 
   modal.querySelector('[href="#settings"]').addEventListener('click', function(ev) {
     ev.preventDefault();
     hideModal(main);
     showSettings(main);
+    document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
+  });
+
+  modal.querySelector('[href="#reject"]').addEventListener('click', function(ev) {
+    ev.preventDefault();
+    var consentTypes = config.consent_types;
+    var consentState = {};
+    for (var key of Object.keys(consentTypes || {})) {
+      var consentTypeName = consentTypes[key].name;
+      consentState[consentTypeName] = 'denied';
+    }
+    saveConsentState(consentState);
+    updateSettings(settings, config, consentState);
+    hideMain(main);
+    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
+  });
+
+  settings.querySelector('[href="#reject"]').addEventListener('click', function(ev) {
+    ev.preventDefault();
+    var consentTypes = config.consent_types;
+    var consentState = {};
+    for (var key of Object.keys(consentTypes || {})) {
+      var consentTypeName = consentTypes[key].name;
+      consentState[consentTypeName] = 'denied';
+    }
+    saveConsentState(consentState);
+    updateSettings(settings, config, consentState);
+    hideMain(main);
+    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
   });
 
 
@@ -232,14 +325,17 @@ function consentBannerJsMain(config) {
 
     consentState = Object.fromEntries(formData);
     saveConsentState(consentState);
+    updateSettings(settings, config, consentState);
     hideMain(main);
+    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
   });
 
-  var settingsButton = body.querySelector('[href="#consent-banner-js-settings"]');
+  var settingsButton = body.querySelector('[href="#consent-banner-settings"]');
   if (null !== settingsButton) {
     settingsButton.addEventListener('click', function(ev) {
       ev.preventDefault();
       showSettings(main);
+      document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
     });
   }
 
@@ -267,10 +363,11 @@ function consentBannerJsMain(config) {
         display: 'none'
       });
 
-      applyStyles(modal.querySelector('.consent-banner-js-modal-buttons'), {
+      applyStyles(modal.querySelector('.consent-banner-modal-buttons'), {
         'margin-left': '20px'
       });
       showModal(main);
+      document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
     }
 
     if ('modal' === config.display.mode) {
@@ -280,14 +377,16 @@ function consentBannerJsMain(config) {
         left: '50%',
         transform: 'translate(-50%, -50%)',
       });
-      applyStyles(modal.querySelector('.consent-banner-js-modal-wrapper'), {
+      applyStyles(modal.querySelector('.consent-banner-modal-wrapper'), {
         display: 'block'
       });
       showModal(main);
+      document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
     }
 
     if ('settings' === config.display.mode) {
       showSettings(main);
+      document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
     }
   }
 
