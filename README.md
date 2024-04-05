@@ -6,7 +6,7 @@
 
 ## Get started
 
-Obviously, it's easy:
+Obviously, it's easy to get started:
 
 ```html
 <script src="https://public-assets.tagconcierge.com/cookies-banner-js/consent-banner.min.js"></script>
@@ -22,7 +22,7 @@ Obviously, it's easy:
 In a nutshell you need to:
 
 1. Load the `consent-banner.min.js` (obviously)
-2. Call the function it register on the `window` object called `cookiesBannerJs`
+2. Call the global function called `cookiesBannerJs`
 
 **INFO:** You can call the `cookiesBannerJs` function whenever, wherever you want, inside it is wrapped with DOM Ready thingy.
 
@@ -92,9 +92,9 @@ Or we allow to apply same styles in JS using JSON config file. It accepts parame
 
 ## Installation
 
-The idea you take release files and put them on your server, or use our cdn. But in any case you just include the JS and optionally CSS in the page html.
+Just include the JS and optionally CSS in the page html.
 
-There is a cool way to do it with Workers@Edge for instance CloudFlare Workers though. Check out this [example](./examples/worker.js) to see how to quickly inject it to any page.
+There is a cool way to do it with Workers@Edge for instance CloudFlare Workers though. Check out this [example](./examples/worker.js) to see how to quickly inject on any page without touching the source code.
 
 
 ## Development
@@ -103,14 +103,14 @@ We like docker so that's how get local dev server:
 
 `docker-compose up -d dev`
 
-Before we need to install npm package:
+But first, we need to install dependencies:
 
 `docker-compose run dev npm i`
 
-And if we need `node` we get into the a shell like that:
+And if we need `node` cli we get into the a shell like that:
 
 `docker-compose run --rm dev bash`
 
-Finally, to build the build we run:
+Finally, to build minified JS file we run:
 
 `docker-compose run dev npm run build`
