@@ -330,7 +330,7 @@ function consentBannerJsMain(config) {
     document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
   });
 
-  var settingsButton = body.querySelector('[href="#consent-banner-settings"]');
+  var settingsButton = body.querySelector('[href$="#consent-banner-settings"]');
   if (null !== settingsButton) {
     settingsButton.addEventListener('click', function(ev) {
       ev.preventDefault();
