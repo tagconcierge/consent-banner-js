@@ -63,8 +63,7 @@ To make that work you need to prepare **three** things:
             accept: '',
             settings: ''
         }
-    },
-    styles: {} // optional JSON object with styles
+    }
 }
 ```
 

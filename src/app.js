@@ -23,16 +23,6 @@ function applyStyles(el, styles) {
   }
 }
 
-function JSONtoStyles(rootEl, styles) {
-  for (var param in styles) {
-    const selector = param.replace(/([A-Z])/g, '-$1');
-    const elements = rootEl.querySelectorAll(param);
-    elements.forEach(function(el) {
-      applyStyles(el, styles[param]);
-    });
-  }
-}
-
 function applySimpleMarkdown(text) {
   return (text || '')
     .replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>')
@@ -340,8 +330,6 @@ function consentBannerJsMain(config) {
   }
 
   body.appendChild(main);
-
-  JSONtoStyles(main, config.styles);
 
   if (true !== isConsentStateProvided(existingConsentState)) {
     if (true === config.display.wall) {
