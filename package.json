@@ -1,12 +1,12 @@
 {
   "name": "cookies-banner-js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "esbuild src/app.js --outdir=www/js --bundle --servedir=www --target=es6",
-    "build": "rimraf dist; esbuild src/app.js --outfile=dist/consent-banner-js/$npm_package_version/consent-banner.min.js --bundle  --target=es6 --minify; cpr styles/ dist/consent-banner-js/$npm_package_version/styles; node json-to-css.js;"
+    "build": "rimraf dist; esbuild src/app.js --outfile=dist/consent-banner-js/$npm_package_version/consent-banner.min.js --bundle  --target=es6 --minify; cpr styles/ dist/consent-banner-js/$npm_package_version/styles;"
   },
   "author": "",
   "license": "MIT",

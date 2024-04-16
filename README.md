@@ -63,38 +63,30 @@ To make that work you need to prepare **three** things:
             accept: '',
             settings: ''
         }
-    },
-    styles: {} // optional JSON object with styles
+    }
 }
 ```
 
 ## Styling
 
-The goal for this project was to have one, single JS file to drop "somewhere" on a page and be done with minimal consent UI.
-For the sake of simplicity it does not include any defaults, no default content and no default styles except some core CSS properties to drive displaying elements.
-
-That said it comes with few set of styles. They can be applied as CSS that you can drop like this:
+This banner comes with mininal set of CSS. It can be applied like this:
 
 `<link rel="stylesheet" type="text/css" href="https://public-assets.tagconcierge.com/cookies-banner-js/styles/light.css">`
 
-Or we allow to apply same styles in JS using JSON config file. It accepts parameter key as CSS selector and value which is an object of CSS properties and their final values.
-
-[light.json](./styles/light.json)
-
 ## Examples
 
-[Bottom bar without "wall"](./examples/bar.html)
+[Bottom bar without "wall"](./www/bar.html)
 
-[Central modal with "wall"](./examples/modal.html)
+[Central modal with "wall"](./www/modal.html)
 
-[Some snippets for Google Tag thing](./examples/gtm.html)
+[Some snippets for Google Tag thing](./www/gtm.html)
 
 
 ## Installation
 
 Just include the JS and optionally CSS in the page html.
 
-There is a cool way to do it with Workers@Edge for instance CloudFlare Workers though. Check out this [example](./examples/worker.js) to see how to quickly inject on any page without touching the source code.
+There is a cool way to do it with Workers@Edge for instance CloudFlare Workers though. Check out this [example](./www/worker.js) to see how to quickly inject on any page without touching the source code.
 
 
 ## Development
