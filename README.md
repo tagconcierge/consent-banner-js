@@ -15,13 +15,13 @@
 
 First, include simple CSS for the banner in the `<head>` of the page:
 ```html
-<link rel="stylesheet" href="https://public-assets.tagconcierge.com/cookies-banner-js/1.0.0/styles/light.css" />
+<link rel="stylesheet" href="https://public-assets.tagconcierge.com/consent-banner/1.1.0/styles/light.css" />
 ```
 
 Then in the footer you can include the actual JS:
 
 ```html
-<script src="https://public-assets.tagconcierge.com/cookies-banner-js/1.0.0/consent-banner.min.js"></script>
+<script src="https://public-assets.tagconcierge.com/consent-banner/1.1.0/cb.min.js"></script>
 <script>
     cookiesBannerJs(
         loadConsentState,

@@ -9,7 +9,7 @@ addEventListener("fetch", (event) => {
 class BodyHandler {
     element(element) {
         element.append(`
-            <script src="https://public-assets.tagconcierge.com/cookies-banner-js/1.1.1/consent-banner.bundle.min.js"></script>
+            <script src="https://public-assets.tagconcierge.com/consent-banner/1.1.0/cb.bundle.min.js"></script>
             <script>
               var config = {
                 display: {
