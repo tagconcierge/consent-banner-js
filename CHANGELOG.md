@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- introduced bundled version with CSS included
+
 ## 1.1.0
 
 - prevent showing buttons if their text is empty
