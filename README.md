@@ -6,9 +6,9 @@
 
 ## How does it work?
 
-1. It takes **JSON configuration** that controls display of the banner.
-2. It fires **JS callback** when user interacts with the banner
-3. It provides simple **JS object** with consent state
+1. It takes **[JSON configuration](#user-content-config-object)** that controls display of the banner.
+2. It fires **[JS callback](#user-content-callbacks)** when user interacts with the banner
+3. It provides simple **[JS object](#user-content-consent-state-object)** with consent state
 
 
 ## Get started
@@ -35,13 +35,12 @@ Then in the footer you can include the actual JS:
 
 To make that work you need to prepare **three** things:
 
-1. A function to load the consent state from somewhere, for instance `localStorage` (see [examples](#examples))
-2. A function to do something when the user provides their consent, for instance save it in `localStorage` (see [examples](#examples))
-3. A config object that contains complete configuration for the banner content (see [examples](#examples))
+1. A **function to load the consent state from somewhere**, for instance `localStorage` (see [examples](#examples))
+2. A **function to do something when the user provides their consent**, for instance save it in `localStorage` (see [examples](#examples))
+3. A **config object that contains complete configuration** for the banner content (see [examples](#examples))
 
 
 ## Config Object
-
 
 ```js
 {
@@ -65,7 +64,7 @@ To make that work you need to prepare **three** things:
             reject: 'Reject',
             accept: 'Accept all'
         }
-    }
+    },
     settings: {
         title: 'Customise your preferences',
         description: 'Longer description with *simple markdown support*.',
@@ -77,6 +76,37 @@ To make that work you need to prepare **three** things:
         }
     }
 }
+```
+
+## Consent State Object
+
+Both JS callback functions provided needs to either accept (on save) or return (on load) Consent State Object:
+
+```js
+{
+    ad_storage: 'granted',
+    analytics_storage: 'denied'
+}
+```
+
+
+## Callbacks
+
+```js
+cookiesBannerJs(
+    function loadConsentState() {
+        const consentState = {}; // get it from somewhere (e.g. localStorage);
+        return consentState;
+    },
+    function saveConsentState(consentState) {
+        // do something with consentState, which is basic JS object:
+        // {
+        //   ad_storage: 'granted',
+        //   analytics_storage: 'denied'
+        // }
+    },
+    config
+);
 ```
 
 **Simple Markdown**
