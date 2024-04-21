@@ -1,8 +1,9 @@
 {
-  "name": "consent-banner-js",
+  "name": "@tagconcierge/consent-banner",
   "version": "1.1.1",
-  "description": "",
-  "main": "index.js",
+  "description": "A zero-dependency, lightweight (~3kB), consent platform agnostic, cookie banner for any website.",
+  "main": "src/app.js",
+  "keywords": ["consent banner", "consent mode", "gtm consent", "cookie banner"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "esbuild src/app.js --outdir=www/js --bundle --servedir=www --target=es6",
@@ -14,5 +15,13 @@
     "cpr": "^3.0.1",
     "esbuild": "0.19.7",
     "rimraf": "^5.0.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tagconcierge/consent-banner-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tagconcierge/consent-banner-js/issues"
+  },
+  "homepage": "https://github.com/tagconcierge/consent-banner-js"
 }

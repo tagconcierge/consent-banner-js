@@ -122,11 +122,11 @@ Use this [Google Tag Manager Template](https://github.com/tagconcierge/tagconcie
 
 **WordPress**
 
-Simple [WordPress plugin](https://github.com/tagconcierge/tc-wordpress-gtm-consent-mode-banner-free) that provides UI for configuration, injects required files and integrates with Google Consent Mode.
+Simple [WordPress plugin](https://wordpress.org/plugins/gtm-consent-mode-banner/) that provides UI for configuration, injects required files and integrates with Google Consent Mode.
 
 **PrestaShop**
 
-Simple [PrestaShop plugin](https://github.com/tagconcierge/tc-prestashop-gtm-consent-mode-banner-free) that provides UI for configuration, injects required files and integrates with Google Consent Mode.
+Simple [PrestaShop plugin](https://www.prestashop.com/forums/topic/1085918-free-module-google-tag-manager-consent-mode-banner-free-consentcookies-banner-compatible-with-gtm-consent-mode-dedicated-for-prestashop/) that provides UI for configuration, injects required files and integrates with Google Consent Mode.
 
 **Cloudflare Worker**
 
