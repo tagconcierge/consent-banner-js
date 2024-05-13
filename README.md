@@ -21,11 +21,11 @@ First, include simple CSS for the banner in the `<head>` of the page:
 Then in the footer you can include the actual JS:
 
 ```html
-<script src="https://public-assets.tagconcierge.com/consent-banner/1.1.0/cb.min.js"></script>
+<script src="https://public-assets.tagconcierge.com/consent-banner/1.1.0/cb.min.js" integrity="sha384-Y1z6IGbLaiHSXP+5xO3W/G9a2z1eEeTDqfF6VDI+ha3lNrMw1+n3VUwC/pQOTb7+" crossorigin="anonymous"></script>
 <script>
     cookiesBannerJs(
         loadConsentState,
-        saveConsentState
+        saveConsentState,
         config
     );
 </script>
