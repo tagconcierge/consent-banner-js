@@ -55,6 +55,10 @@ function addEventListener(elements, event, callback) {
   }
 }
 
+function dispatchBodyEvent(eventName) {
+  document.body.dispatchEvent(new CustomEvent('consent-banner.' + eventName));
+}
+
 // State Management
 function isConsentStateProvided(consentState) {
   return null !== consentState;
@@ -255,7 +259,7 @@ function consentBannerJsMain(config) {
     updateSettings(settings, config, consentState);
     saveConsentState(consentState);
     hideMain(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
+    dispatchBodyEvent('hidden');
   });
 
   addEventListener(modal.querySelector('[href="#accept"]'), 'click', function(ev) {
@@ -269,7 +273,7 @@ function consentBannerJsMain(config) {
     updateSettings(settings, config, consentState);
     saveConsentState(consentState);
     hideMain(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
+    dispatchBodyEvent('hidden');
   });
 
   addEventListener(settings.querySelector('[href="#close"]'), 'click', function(ev) {
@@ -284,7 +288,7 @@ function consentBannerJsMain(config) {
     ev.preventDefault();
     hideModal(main);
     showSettings(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
+    dispatchBodyEvent('shown');
   });
 
   addEventListener(modal.querySelector('[href="#reject"]'),'click', function(ev) {
@@ -298,7 +302,7 @@ function consentBannerJsMain(config) {
     saveConsentState(consentState);
     updateSettings(settings, config, consentState);
     hideMain(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
+    dispatchBodyEvent('hidden');
   });
 
   addEventListener(settings.querySelector('[href="#reject"]'), 'click', function(ev) {
@@ -312,7 +316,7 @@ function consentBannerJsMain(config) {
     saveConsentState(consentState);
     updateSettings(settings, config, consentState);
     hideMain(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
+    dispatchBodyEvent('hidden');
   });
 
 
@@ -329,21 +333,21 @@ function consentBannerJsMain(config) {
     saveConsentState(consentState);
     updateSettings(settings, config, consentState);
     hideMain(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.hidden'));
+    dispatchBodyEvent('hidden');
   });
 
   addEventListener(body.querySelector('[href$="#consent-banner-settings"]'), 'click', function(ev) {
     ev.preventDefault();
     showSettings(main);
     hideModal(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
+    dispatchBodyEvent('shown');
   });
 
   addEventListener(body, 'consent-banner.show-settings', function(ev) {
     ev.preventDefault();
     showSettings(main);
     hideModal(main);
-    document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
+    dispatchBodyEvent('shown');
   });
 
   body.appendChild(main);
@@ -372,7 +376,7 @@ function consentBannerJsMain(config) {
         'margin-left': '20px'
       });
       showModal(main);
-      document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
+      dispatchBodyEvent('shown');
     }
 
     if ('modal' === config.display.mode) {
@@ -386,12 +390,12 @@ function consentBannerJsMain(config) {
         display: 'block'
       });
       showModal(main);
-      document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
+      dispatchBodyEvent('shown');
     }
 
     if ('settings' === config.display.mode) {
       showSettings(main);
-      document.body.dispatchEvent(new CustomEvent('consent-banner.shown'));
+      dispatchBodyEvent('shown');
     }
   }
 
@@ -403,5 +407,4 @@ window.cookiesBannerJs = function(overrideLoadConsentState, overrideSaveConsentS
   ready(consentBannerJsMain.bind(null, config));
 }
 
-
-
+dispatchBodyEvent('ready');
