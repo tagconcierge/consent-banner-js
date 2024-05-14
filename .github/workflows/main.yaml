@@ -1,7 +1,9 @@
 name: app-build
 on:
-  workflow_dispatch:
-    branches: [ feature/body-event-on-library-loaded ]
+  push:
+    branches:
+      - main
+      - develop
 jobs:
   deployment:
     runs-on: ubuntu-latest
