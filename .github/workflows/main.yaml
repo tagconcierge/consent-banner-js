@@ -18,5 +18,5 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@v1.3.1
       - uses: actions/upload-artifact@v4
         with:
-          name: consent-banner-${{ steps.package-version.outputs.current-version}}.zip
+          name: consent-banner-${{ steps.package-version.outputs.current-version}}
           path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}
