@@ -1,6 +1,6 @@
 services:
   dev:
-    image: node
+    image: node:21
     entrypoint:
     command: npm run serve
     volumes:

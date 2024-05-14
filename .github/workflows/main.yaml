@@ -1,0 +1,22 @@
+name: app-build
+on:
+  push:
+    branches:
+      - main
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - run: yarn && yarn build
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consent-banner-${{ steps.package-version.outputs.current-version}}
+          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}
