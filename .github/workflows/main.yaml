@@ -16,7 +16,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist-files
-              path: |
-                dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/styles/light.css
-                dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.min.js
-                dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.bundle.min.js
+          path: |
+            dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/styles/light.css
+            dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.min.js
+            dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.bundle.min.js
