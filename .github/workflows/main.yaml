@@ -1,0 +1,22 @@
+name: Build
+on:
+  workflow_dispatch:
+    branches: [ feature/body-event-on-library-loaded ]
+jobs:
+  deployment:
+    runs-on: node:21
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'Build'
+        run: yarn && yarn build
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: 'Upload Artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+              path: |
+                dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/styles/light.css
+                dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.min.js
+                dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.bundle.min.js
