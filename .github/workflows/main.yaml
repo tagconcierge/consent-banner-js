@@ -5,7 +5,7 @@ on:
       - main
       - develop
 jobs:
-  deployment:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,13 +18,5 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@v1.3.1
       - uses: actions/upload-artifact@v4
         with:
-          name: consent-banner.bundle.min.js
-          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.bundle.min.js
-      - uses: actions/upload-artifact@v4
-        with:
-          name: consent-banner.min.js
-          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.min.js
-      - uses: actions/upload-artifact@v4
-        with:
-          name: light.css
-          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/styles/light.css
+          name: consent-banner-${{ steps.package-version.outputs.current-version}}.zip
+          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}
