@@ -4,11 +4,13 @@ on:
     branches: [ feature/body-event-on-library-loaded ]
 jobs:
   deployment:
-    runs-on: node:21
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 'Build'
-        run: yarn && yarn build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - run: yarn && yarn build
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
