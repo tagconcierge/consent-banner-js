@@ -1,4 +1,4 @@
-name: Build
+name: app-build
 on:
   workflow_dispatch:
     branches: [ feature/body-event-on-library-loaded ]
@@ -14,11 +14,15 @@ jobs:
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
-      - name: 'Upload Artifacts'
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: dist-files
-          path: |
-            dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/styles/light.css
-            dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.min.js
-            dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.bundle.min.js
+          name: consent-banner.bundle.min.js
+          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.bundle.min.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consent-banner.min.js
+          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/consent-banner.min.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: light.css
+          path: dist/consent-banner-js/${{ steps.package-version.outputs.current-version}}/styles/light.css
