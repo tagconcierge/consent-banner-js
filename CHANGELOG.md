@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.1
+
+- changed the element on which the 'consent-banner.ready' event is called from document.body to window
+
+## 1.2.0
+
+- added 'consent-banner.ready' event triggered immediate after library loading
+- reduced library file size for improved performance
+
 ## 1.1.1
 
 - introduced bundled version with CSS included
