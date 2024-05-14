@@ -407,4 +407,4 @@ window.cookiesBannerJs = function(overrideLoadConsentState, overrideSaveConsentS
   ready(consentBannerJsMain.bind(null, config));
 }
 
-dispatchBodyEvent('ready');
+window.dispatchEvent(new CustomEvent('consent-banner.ready'));
