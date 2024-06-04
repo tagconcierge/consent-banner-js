@@ -142,7 +142,7 @@
   #consent-banner-settings > div > form div:nth-child(2) {
     max-height: none;
   }
-  #consent-banner-modal {
+  #consent-banner-main:not([data-mode="bar"]) #consent-banner-modal {
     width: auto;
     left: 5% !important;
     right: 5% !important;
