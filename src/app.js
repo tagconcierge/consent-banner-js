@@ -75,14 +75,16 @@ function saveConsentState(consentState) {
 }
 
 // Components
-function createMain(gtmCookiesConfig) {
+function createMain(config) {
   var main = document.createElement("div");
   main.setAttribute('id', 'consent-banner-main');
+  main.setAttribute('data-mode', config.display.mode);
+  main.setAttribute('data-wall', config.display.wall ?? false);
   main.style.display = 'none';
   return main;
 }
 
-function createWall(gtmCookiesConfig) {
+function createWall(config) {
   var wall = document.createElement("div");
   wall.setAttribute('id', 'consent-banner-wall');
   return wall;
@@ -227,7 +229,9 @@ function showSettings(main) {
 function hideSettings(main) {
   main.style.display = 'block';
   main.querySelector('#consent-banner-settings').style.display = 'none';
-  hideWall(main)
+  if ('true' !== main.getAttribute('data-wall')) {
+    hideWall(main);
+  }
 }
 
 
