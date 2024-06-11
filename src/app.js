@@ -340,7 +340,7 @@ function consentBannerJsMain(config) {
     dispatchBodyEvent('hidden');
   });
 
-  addEventListener(body.querySelector('[href$="#consent-banner-settings"]'), 'click', function(ev) {
+  addEventListener(body.querySelectorAll('[href$="#consent-banner-settings"]'), 'click', function(ev) {
     ev.preventDefault();
     showSettings(main);
     hideModal(main);
