@@ -229,7 +229,7 @@ function showSettings(main) {
 function hideSettings(main) {
   main.style.display = 'block';
   main.querySelector('#consent-banner-settings').style.display = 'none';
-  if ('true' !== main.getAttribute('data-wall')) {
+  if ('true' !== main.getAttribute('data-wall') || isConsentStateProvided(loadConsentState())) {
     hideWall(main);
   }
 }
@@ -283,8 +283,10 @@ function consentBannerJsMain(config) {
   addEventListener(settings.querySelector('[href="#close"]'), 'click', function(ev) {
     ev.preventDefault();
     hideSettings(main);
-    if (!isConsentStateProvided(existingConsentState)) {
+    if (!isConsentStateProvided(loadConsentState())) {
       showModal(main);
+    } else {
+      dispatchBodyEvent('hidden');
     }
   });
 
@@ -340,7 +342,7 @@ function consentBannerJsMain(config) {
     dispatchBodyEvent('hidden');
   });
 
-  addEventListener(body.querySelector('[href$="#consent-banner-settings"]'), 'click', function(ev) {
+  addEventListener(body.querySelectorAll('[href$="#consent-banner-settings"]'), 'click', function(ev) {
     ev.preventDefault();
     showSettings(main);
     hideModal(main);
