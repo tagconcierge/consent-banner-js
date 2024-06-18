@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.3
+
+- fixed consent settings modal closing issue
+- improved consent settings opener event listener
+
+## 1.2.2
+
+- fixed appearance issues on mobile devices
+
 ## 1.2.1
 
 - changed the element on which the 'consent-banner.ready' event is called from document.body to window
