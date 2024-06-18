@@ -1,6 +1,6 @@
 {
   "name": "@tagconcierge/consent-banner",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "A zero-dependency, lightweight (~3kB), consent platform agnostic, cookie banner for any website.",
   "main": "src/app.js",
   "keywords": ["consent banner", "consent mode", "gtm consent", "cookie banner"],
