@@ -335,7 +335,7 @@ function consentBannerJsMain(config) {
     ev.preventDefault();
     const formData = new FormData(ev.target);
 
-    consentState = Object.fromEntries(formData);
+    const consentState = Object.fromEntries(formData);
     saveConsentState(consentState);
     updateSettings(settings, config, consentState);
     hideMain(main);
