@@ -1,21 +1,4 @@
 // Utilities
-function ready(fn) {
-  if (document.readyState != 'loading') {
-    fn();
-  } else if (document.addEventListener) {
-    document.addEventListener('DOMContentLoaded', fn);
-  } else {
-    document.attachEvent('onreadystatechange', function() {
-      if (document.readyState != 'loading')
-        fn();
-    });
-  }
-}
-
-function isObject(obj) {
-  return typeof obj === 'object' && obj !== null;
-}
-
 function applyStyles(el, styles) {
   if (null === el) return;
   for (var key of Object.keys(styles || {})) {
@@ -410,7 +393,7 @@ function consentBannerJsMain(config) {
 window.cookiesBannerJs = function(overrideLoadConsentState, overrideSaveConsentState, config) {
   loadConsentState = overrideLoadConsentState;
   saveConsentState = overrideSaveConsentState;
-  ready(consentBannerJsMain.bind(null, config));
+  consentBannerJsMain(config);
 }
 
 window.dispatchEvent(new CustomEvent('consent-banner.ready'));
