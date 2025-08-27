@@ -69,13 +69,11 @@ function createMain(config) {
   main.setAttribute('id', 'consent-banner-main');
   main.setAttribute('data-mode', config.display.mode);
   main.setAttribute('data-wall', config.display.wall ?? false);
-  main.style.display = 'none';
   return main;
 }
 
 function createModal(config) {
   var modal = document.createElement("dialog");
-  modal.setAttribute('closedby', 'none');
   modal.setAttribute('id', 'consent-banner-modal');
   modal.setAttribute('closedby', 'none');
   modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><span class="consent-banner-heading"></span><p></p></div><div class="consent-banner-modal-buttons"></div></div>';
@@ -172,17 +170,14 @@ function updateSettings(settings, config, existingConsentState) {
   }
 }
 
-
 function hideMain(main) {
   var modal = main.querySelector('#consent-banner-modal');
   var settings = main.querySelector('#consent-banner-settings');
   modal.close();
   settings.close();
-  main.style.display = 'none';
 }
 
 function showModal(main) {
-  main.style.display = 'block';
   var modal = main.querySelector('#consent-banner-modal');
   if (main.getAttribute('data-mode') === 'bar' && main.getAttribute('data-wall') !== 'true') {
     modal.show();
@@ -194,13 +189,9 @@ function showModal(main) {
 function hideModal(main) {
   var modal = main.querySelector('#consent-banner-modal');
   modal.close();
-  if (!main.querySelector('#consent-banner-settings').open) {
-    main.style.display = 'none';
-  }
 }
 
 function showSettings(main) {
-  main.style.display = 'block';
   var settings = main.querySelector('#consent-banner-settings');
   if (main.getAttribute('data-mode') === 'bar' && main.getAttribute('data-wall') !== 'true') {
     settings.show();
@@ -212,11 +203,7 @@ function showSettings(main) {
 function hideSettings(main) {
   var settings = main.querySelector('#consent-banner-settings');
   settings.close();
-  if (!main.querySelector('#consent-banner-modal').open) {
-    main.style.display = 'none';
-  }
 }
-
 
 function consentBannerJsMain(config) {
   var body = document.querySelector('body');
@@ -231,9 +218,8 @@ function consentBannerJsMain(config) {
   main.appendChild(modal);
   main.appendChild(settings);
 
-
   // apply actions
-  addEventListener(settings.querySelector('[href="#accept"]'), 'click', function(ev) {
+  addEventListener(main.querySelectorAll('[href="#accept"]'), 'click', function(ev) {
     ev.preventDefault();
     var consentTypes = config.consent_types;
     var consentState = {};
@@ -247,21 +233,7 @@ function consentBannerJsMain(config) {
     dispatchBodyEvent('hidden');
   });
 
-  addEventListener(modal.querySelector('[href="#accept"]'), 'click', function(ev) {
-    ev.preventDefault();
-    var consentTypes = config.consent_types;
-    var consentState = {};
-    for (var key of Object.keys(consentTypes || {})) {
-      var consentTypeName = consentTypes[key].name;
-      consentState[consentTypeName] = 'granted';
-    }
-    updateSettings(settings, config, consentState);
-    saveConsentState(consentState);
-    hideMain(main);
-    dispatchBodyEvent('hidden');
-  });
-
-  addEventListener(settings.querySelector('[href="#close"]'), 'click', function(ev) {
+  addEventListener(settings.querySelectorAll('[href="#close"]'), 'click', function(ev) {
     ev.preventDefault();
     hideSettings(main);
     if (!isConsentStateProvided(loadConsentState())) {
@@ -278,7 +250,7 @@ function consentBannerJsMain(config) {
     dispatchBodyEvent('shown');
   });
 
-  addEventListener(modal.querySelector('[href="#reject"]'),'click', function(ev) {
+  addEventListener(main.querySelectorAll('[href="#reject"]'),'click', function(ev) {
     ev.preventDefault();
     var consentTypes = config.consent_types;
     var consentState = {};
@@ -291,21 +263,6 @@ function consentBannerJsMain(config) {
     hideMain(main);
     dispatchBodyEvent('hidden');
   });
-
-  addEventListener(settings.querySelector('[href="#reject"]'), 'click', function(ev) {
-    ev.preventDefault();
-    var consentTypes = config.consent_types;
-    var consentState = {};
-    for (var key of Object.keys(consentTypes || {})) {
-      var consentTypeName = consentTypes[key].name;
-      consentState[consentTypeName] = 'denied';
-    }
-    saveConsentState(consentState);
-    updateSettings(settings, config, consentState);
-    hideMain(main);
-    dispatchBodyEvent('hidden');
-  });
-
 
   addEventListener(settings.querySelector('[href="#save"]'), 'click', function(ev) {
     ev.preventDefault();
