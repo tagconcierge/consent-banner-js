@@ -2,10 +2,15 @@
 # yarn lockfile v1
 
 
-"@esbuild/linux-x64@0.19.7":
+"@esbuild/darwin-arm64@0.19.7":
   version "0.19.7"
-  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.19.7.tgz"
-  integrity sha512-ZYZopyLhm4mcoZXjFt25itRlocKlcazDVkB4AhioiL9hOWhDldU9n38g62fhOI4Pth6vp+Mrd5rFKxD0/S+7aQ==
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.19.7.tgz"
+  integrity sha512-dr81gbmWN//3ZnBIm6YNCl4p3pjnabg1/ZVOgz2fJoUO1a3mq9WQ/1iuEluMs7mCL+Zwv7AY5e3g1hjXqQZ9Iw==
+
+"@esbuild/linux-arm64@0.19.7":
+  version "0.19.7"
+  resolved "https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.19.7.tgz"
+  integrity sha512-inHqdOVCkUhHNvuQPT1oCB7cWz9qQ/Cz46xmVe0b7UXcuIJU3166aqSunsqkgSGMtUCWOZw3+KMwI6otINuC9g==
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"

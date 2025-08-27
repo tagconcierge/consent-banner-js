@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0
+
+- switched to native `<dialog>` element to simplify the code
+- removed `<hx>` tags to avoid heading hierarchy issues for SEO reasons
+
+Breaking changes in custom styling selectors:
+
+- `h2` needs to be replaced with `.consent-banner-heading`
+- `#consent-banner-wall` is removed and can be replaced with `#consent-banner-modal::backdrop` or `#consent-banner-settings::backdrop`
+
 ## 1.2.3
 
 - fixed consent settings modal closing issue
