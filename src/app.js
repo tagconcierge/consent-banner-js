@@ -11,12 +11,6 @@ function ready(fn) {
     });
   }
 }
-function applyStyles(el, styles) {
-  if (null === el) return;
-  for (var key of Object.keys(styles || {})) {
-    el.style[key] = styles[key];
-  }
-}
 
 function applySimpleMarkdown(text) {
   return (text || '')
@@ -81,6 +75,7 @@ function createMain(config) {
 
 function createModal(config) {
   var modal = document.createElement("dialog");
+  modal.setAttribute('closedby', 'none');
   modal.setAttribute('id', 'consent-banner-modal');
   modal.setAttribute('closedby', 'none');
   modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><span class="consent-banner-heading"></span><p></p></div><div class="consent-banner-modal-buttons"></div></div>';
@@ -345,45 +340,11 @@ function consentBannerJsMain(config) {
   body.appendChild(main);
 
   if (true !== isConsentStateProvided(existingConsentState)) {
-    if ('bar' === config.display.mode) {
-      applyStyles(modal, {
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        'border-bottom': 'none',
-        'border-left': 'none',
-        'border-right': 'none',
-        'border-radius': '0',
-        'padding': '5px'
-      });
-      applyStyles(modal.querySelector('.consent-banner-heading'), {
-        display: 'none'
-      });
-
-      applyStyles(modal.querySelector('.consent-banner-modal-buttons'), {
-        'margin-left': '20px'
-      });
-      showModal(main);
-      dispatchBodyEvent('shown');
-    }
-
-    if ('modal' === config.display.mode) {
-      applyStyles(modal, {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      });
-      applyStyles(modal.querySelector('.consent-banner-modal-wrapper'), {
-        display: 'block'
-      });
-      showModal(main);
-      dispatchBodyEvent('shown');
-    }
-
     if ('settings' === config.display.mode) {
       showSettings(main);
+      dispatchBodyEvent('shown');
+    } else {
+      showModal(main);
       dispatchBodyEvent('shown');
     }
   }
