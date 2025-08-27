@@ -16,10 +16,6 @@
   z-index: 2147483647;
 }
 
-#consent-banner-modal:not([open]),
-#consent-banner-settings:not([open]) {
-  display: none;
-}
 
 #consent-banner-modal,
 #consent-banner-settings {
@@ -151,9 +147,6 @@
   width: 100%;
 }
 
-/*#consent-banner-main[data-mode="bar"] #consent-banner-modal:not([open]) {
-  display: none;
-}*/
 
 #consent-banner-main[data-mode="bar"] #consent-banner-modal[open]:not(:modal) {
   position: fixed;
@@ -171,7 +164,6 @@
 #consent-banner-main[data-mode="bar"] .consent-banner-modal-buttons {
   margin-left: 20px;
 }
-
 
 #consent-banner-main[data-mode="modal"] #consent-banner-modal {
   position: fixed;
@@ -218,7 +210,6 @@
     display: block;
     margin-bottom: 10px;
     text-align: center;
-    width: 25%;
   }
   #consent-banner-settings ul {
     padding-bottom: 100px;
