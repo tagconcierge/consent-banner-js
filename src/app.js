@@ -345,10 +345,6 @@ function consentBannerJsMain(config) {
   body.appendChild(main);
 
   if (true !== isConsentStateProvided(existingConsentState)) {
-    if (true === config.display.wall) {
-      // showWall(main); // This line is removed as per the edit hint
-    }
-
     if ('bar' === config.display.mode) {
       applyStyles(modal, {
         position: 'fixed',
