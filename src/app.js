@@ -82,6 +82,7 @@ function createMain(config) {
 function createModal(config) {
   var modal = document.createElement("dialog");
   modal.setAttribute('id', 'consent-banner-modal');
+  modal.setAttribute('closedby', 'none');
   modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><span class="consent-banner-heading"></span><p></p></div><div class="consent-banner-modal-buttons"></div></div>';
   modal.querySelector('.consent-banner-heading').textContent = config.modal.title;
   modal.querySelector('p').innerHTML = applySimpleMarkdown(config.modal.description);
@@ -99,6 +100,7 @@ function createSettings(config, existingConsentState) {
 
   var settings = document.createElement("dialog");
   settings.setAttribute('id', 'consent-banner-settings');
+  settings.setAttribute('closedby', 'none');
   settings.innerHTML = '<div><form><span class="consent-banner-heading"></span><div><p></p><ul></ul></div><div class="consent-banner-settings-buttons"></div></form></div>';
 
   settings.querySelector('.consent-banner-heading').textContent = config.settings.title;
