@@ -2,7 +2,6 @@
   text-decoration: none;
   background: none;
   border: 1px solid #000;
-  text-wrap: nowrap;
   white-space: nowrap;
   color: rgb(231, 78, 30);
   border-color: rgb(231, 78, 30);
@@ -47,9 +46,10 @@
   padding: 0 10px;
 }
 
-#consent-banner-settings h2 {
+#consent-banner-settings .consent-banner-heading {
   padding-bottom: 15px;
   border-bottom: 1px solid #ededed;
+  display: block;
 }
 
 #consent-banner-modal .consent-banner-modal-wrapper p {
@@ -120,14 +120,9 @@
   flex: 1;
 }
 
-#consent-banner-main h2 {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-#consent-banner-settings, #consent-banner-modal {
+/*#consent-banner-settings, #consent-banner-modal {
   border-radius: 6px;
-}
+}*/
 
 .consent-banner-button[href="#accept"] {
   color: #ffffff;
@@ -160,9 +155,9 @@
   width: 100%;
 }
 
-#consent-banner-main[data-mode="bar"] #consent-banner-modal:not([open]) {
+/*#consent-banner-main[data-mode="bar"] #consent-banner-modal:not([open]) {
   display: none;
-}
+}*/
 
 #consent-banner-main[data-mode="bar"] #consent-banner-modal[open]:not(:modal) {
   position: fixed;
@@ -219,9 +214,6 @@
     text-align: center;
     display: block;
   }
-  #consent-banner-settings .consent-banner-settings-buttons .button {
-    width: 25%;
-  }
   #consent-banner-modal .consent-banner-modal-buttons {
     margin: 0 !important;
   }
@@ -230,6 +222,7 @@
     display: block;
     margin-bottom: 10px;
     text-align: center;
+    width: 25%;
   }
   #consent-banner-settings ul {
     padding-bottom: 100px;
