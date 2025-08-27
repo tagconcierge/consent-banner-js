@@ -120,10 +120,6 @@
   flex: 1;
 }
 
-/*#consent-banner-settings, #consent-banner-modal {
-  border-radius: 6px;
-}*/
-
 .consent-banner-button[href="#accept"] {
   color: #ffffff;
   border-color: rgb(231, 78, 30);
