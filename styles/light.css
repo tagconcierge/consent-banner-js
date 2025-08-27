@@ -17,10 +17,27 @@
   z-index: 2147483647;
 }
 
-#consent-banner-modal {
+#consent-banner-modal:not([open]),
+#consent-banner-settings:not([open]) {
+  display: none;
+}
+
+#consent-banner-modal,
+#consent-banner-settings {
+  border: none;
+  padding: 0;
   background: #fff;
-  padding: 25px 10px 30px !important;
+  border-radius: 6px;
   box-shadow: rgba(0, 0, 0, 0.4) 0 0 20px;
+}
+
+#consent-banner-modal::backdrop,
+#consent-banner-settings::backdrop {
+  background: rgba(0, 0, 0, .7);
+}
+
+#consent-banner-modal {
+  padding: 25px 10px 30px !important;
 }
 
 #consent-banner-modal .consent-banner-modal-wrapper {
@@ -68,12 +85,6 @@
 }
 
 #consent-banner-settings {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  box-shadow: rgba(0, 0, 0, 0.4) 0 0 20px;
   padding: 20px 30px 15px;
   overflow-x: hidden;
   min-width: 500px;
@@ -129,8 +140,13 @@
   border-color: rgb(220, 114, 80);
 }
 
-#consent-banner-modal .consent-banner-modal-wrapper h2 {
+#consent-banner-modal .consent-banner-modal-wrapper .consent-banner-heading {
   display: block !important;
+}
+
+#consent-banner-main .consent-banner-heading {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 #consent-banner-settings > div > form div:nth-child(2) {
@@ -138,26 +154,36 @@
   overflow-x: hidden;
 }
 
+#consent-banner-main[data-mode="bar"] #consent-banner-modal {
+  margin: 0;
+  max-width: none;
+  width: 100%;
+}
+
+#consent-banner-main[data-mode="bar"] #consent-banner-modal:not([open]) {
+  display: none;
+}
+
+#consent-banner-main[data-mode="bar"] #consent-banner-modal[open]:not(:modal) {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147483647;
+}
+
 @media (max-width:576px) {
-  #consent-banner-settings > div > form div:nth-child(2) {
+  #consent-banner-settings {
+    width: auto;
+    margin: 0;
+    border-radius: 0;
+    min-width: auto;
+    height: 100vh;
     max-height: none;
   }
   #consent-banner-main:not([data-mode="bar"]) #consent-banner-modal {
-    width: auto;
-    left: 5% !important;
-    right: 5% !important;
-    min-width: auto;
-    transform: translate(0, -50%) !important;
-  }
-  #consent-banner-settings {
-    width: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transform: none;
-    max-height: 100%;
-    min-width: auto;
+    margin: 0;
+    width: 90vw;
   }
   #consent-banner-settings .consent-banner-settings-buttons {
     position: fixed;

@@ -79,18 +79,11 @@ function createMain(config) {
   return main;
 }
 
-function createWall(config) {
-  var wall = document.createElement("div");
-  wall.setAttribute('id', 'consent-banner-wall');
-  return wall;
-}
-
 function createModal(config) {
-  var modal = document.createElement("div");
-  modal.style.display = 'none';
+  var modal = document.createElement("dialog");
   modal.setAttribute('id', 'consent-banner-modal');
-  modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><h2></h2><p></p></div><div class="consent-banner-modal-buttons"></div></div>';
-  modal.querySelector('h2').textContent = config.modal.title;
+  modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><span class="consent-banner-heading"></span><p></p></div><div class="consent-banner-modal-buttons"></div></div>';
+  modal.querySelector('.consent-banner-heading').textContent = config.modal.title;
   modal.querySelector('p').innerHTML = applySimpleMarkdown(config.modal.description);
   var buttons = modal.querySelector('.consent-banner-modal-buttons');
 
@@ -104,12 +97,11 @@ function createModal(config) {
 function createSettings(config, existingConsentState) {
   var isConsentProvided = isConsentStateProvided(existingConsentState);
 
-  var settings = document.createElement("div");
+  var settings = document.createElement("dialog");
   settings.setAttribute('id', 'consent-banner-settings');
-  settings.style.display = 'none';
-  settings.innerHTML = '<div><form><h2></h2><div><p></p><ul></ul></div><div class="consent-banner-settings-buttons"></div></form></div>';
+  settings.innerHTML = '<div><form><span class="consent-banner-heading"></span><div><p></p><ul></ul></div><div class="consent-banner-settings-buttons"></div></form></div>';
 
-  settings.querySelector('h2').textContent = config.settings.title;
+  settings.querySelector('.consent-banner-heading').textContent = config.settings.title;
   settings.querySelector('p').innerHTML = applySimpleMarkdown(config.settings.description);
 
   var buttons = settings.querySelector('.consent-banner-settings-buttons');
@@ -185,47 +177,46 @@ function updateSettings(settings, config, existingConsentState) {
 
 
 function hideMain(main) {
+  var modal = main.querySelector('#consent-banner-modal');
+  var settings = main.querySelector('#consent-banner-settings');
+  modal.close();
+  settings.close();
   main.style.display = 'none';
-  hideWall(main);
-}
-
-function showWall(main) {
-  var wall = main.querySelector('#consent-banner-wall');
-  wall.style.background = 'rgba(0, 0, 0, .7)';
-  wall.style.position = 'fixed';
-  wall.style.top = '0';
-  wall.style.right = '0';
-  wall.style.left = '0';
-  wall.style.bottom = '0';
-}
-
-function hideWall(main) {
-  var wall = main.querySelector('#consent-banner-wall');
-  wall.style.position = 'static';
-  wall.style.background = 'none';
 }
 
 function showModal(main) {
   main.style.display = 'block';
-  main.querySelector('#consent-banner-modal').style.display = 'block';
+  var modal = main.querySelector('#consent-banner-modal');
+  if (main.getAttribute('data-mode') === 'bar' && main.getAttribute('data-wall') !== 'true') {
+    modal.show();
+  } else {
+    modal.showModal();
+  }
 }
 
 function hideModal(main) {
-  main.style.display = 'block';
-  main.querySelector('#consent-banner-modal').style.display = 'none';
+  var modal = main.querySelector('#consent-banner-modal');
+  modal.close();
+  if (!main.querySelector('#consent-banner-settings').open) {
+    main.style.display = 'none';
+  }
 }
 
 function showSettings(main) {
   main.style.display = 'block';
-  main.querySelector('#consent-banner-settings').style.display = 'block';
-  showWall(main)
+  var settings = main.querySelector('#consent-banner-settings');
+  if (main.getAttribute('data-mode') === 'bar' && main.getAttribute('data-wall') !== 'true') {
+    settings.show();
+  } else {
+    settings.showModal();
+  }
 }
 
 function hideSettings(main) {
-  main.style.display = 'block';
-  main.querySelector('#consent-banner-settings').style.display = 'none';
-  if ('true' !== main.getAttribute('data-wall') || isConsentStateProvided(loadConsentState())) {
-    hideWall(main);
+  var settings = main.querySelector('#consent-banner-settings');
+  settings.close();
+  if (!main.querySelector('#consent-banner-modal').open) {
+    main.style.display = 'none';
   }
 }
 
@@ -237,13 +228,11 @@ function consentBannerJsMain(config) {
 
   // create all components
   var main = createMain(config);
-  var wall = createWall(config);
   var modal = createModal(config);
   var settings = createSettings(config, existingConsentState);
 
-  main.appendChild(wall);
-  wall.appendChild(modal);
-  wall.appendChild(settings);
+  main.appendChild(modal);
+  main.appendChild(settings);
 
 
   // apply actions
@@ -355,7 +344,7 @@ function consentBannerJsMain(config) {
 
   if (true !== isConsentStateProvided(existingConsentState)) {
     if (true === config.display.wall) {
-      showWall(main);
+      // showWall(main); // This line is removed as per the edit hint
     }
 
     if ('bar' === config.display.mode) {
@@ -367,9 +356,10 @@ function consentBannerJsMain(config) {
         'border-bottom': 'none',
         'border-left': 'none',
         'border-right': 'none',
+        'border-radius': '0',
         'padding': '5px'
       });
-      applyStyles(modal.querySelector('h2'), {
+      applyStyles(modal.querySelector('.consent-banner-heading'), {
         display: 'none'
       });
 
