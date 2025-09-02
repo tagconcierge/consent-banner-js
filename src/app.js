@@ -1,28 +1,4 @@
 // Utilities
-function ready(fn) {
-  if (document.readyState != 'loading') {
-    fn();
-  } else if (document.addEventListener) {
-    document.addEventListener('DOMContentLoaded', fn);
-  } else {
-    document.attachEvent('onreadystatechange', function() {
-      if (document.readyState != 'loading')
-        fn();
-    });
-  }
-}
-
-function isObject(obj) {
-  return typeof obj === 'object' && obj !== null;
-}
-
-function applyStyles(el, styles) {
-  if (null === el) return;
-  for (var key of Object.keys(styles || {})) {
-    el.style[key] = styles[key];
-  }
-}
-
 function applySimpleMarkdown(text) {
   return (text || '')
     .replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>')
@@ -80,22 +56,15 @@ function createMain(config) {
   main.setAttribute('id', 'consent-banner-main');
   main.setAttribute('data-mode', config.display.mode);
   main.setAttribute('data-wall', config.display.wall ?? false);
-  main.style.display = 'none';
   return main;
 }
 
-function createWall(config) {
-  var wall = document.createElement("div");
-  wall.setAttribute('id', 'consent-banner-wall');
-  return wall;
-}
-
 function createModal(config) {
-  var modal = document.createElement("div");
-  modal.style.display = 'none';
+  var modal = document.createElement("dialog");
   modal.setAttribute('id', 'consent-banner-modal');
-  modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><h2></h2><p></p></div><div class="consent-banner-modal-buttons"></div></div>';
-  modal.querySelector('h2').textContent = config.modal.title;
+  modal.setAttribute('closedby', 'none');
+  modal.innerHTML = '<div class="consent-banner-modal-wrapper"><div><span class="consent-banner-heading"></span><p></p></div><div class="consent-banner-modal-buttons"></div></div>';
+  modal.querySelector('.consent-banner-heading').textContent = config.modal.title;
   modal.querySelector('p').innerHTML = applySimpleMarkdown(config.modal.description);
   var buttons = modal.querySelector('.consent-banner-modal-buttons');
 
@@ -109,12 +78,12 @@ function createModal(config) {
 function createSettings(config, existingConsentState) {
   var isConsentProvided = isConsentStateProvided(existingConsentState);
 
-  var settings = document.createElement("div");
+  var settings = document.createElement("dialog");
   settings.setAttribute('id', 'consent-banner-settings');
-  settings.style.display = 'none';
-  settings.innerHTML = '<div><form><h2></h2><div><p></p><ul></ul></div><div class="consent-banner-settings-buttons"></div></form></div>';
+  settings.setAttribute('closedby', 'none');
+  settings.innerHTML = '<div><form><span class="consent-banner-heading"></span><div><p></p><ul></ul></div><div class="consent-banner-settings-buttons"></div></form></div>';
 
-  settings.querySelector('h2').textContent = config.settings.title;
+  settings.querySelector('.consent-banner-heading').textContent = config.settings.title;
   settings.querySelector('p').innerHTML = applySimpleMarkdown(config.settings.description);
 
   var buttons = settings.querySelector('.consent-banner-settings-buttons');
@@ -188,52 +157,36 @@ function updateSettings(settings, config, existingConsentState) {
   }
 }
 
-
 function hideMain(main) {
-  main.style.display = 'none';
-  hideWall(main);
-}
-
-function showWall(main) {
-  var wall = main.querySelector('#consent-banner-wall');
-  wall.style.background = 'rgba(0, 0, 0, .7)';
-  wall.style.position = 'fixed';
-  wall.style.top = '0';
-  wall.style.right = '0';
-  wall.style.left = '0';
-  wall.style.bottom = '0';
-}
-
-function hideWall(main) {
-  var wall = main.querySelector('#consent-banner-wall');
-  wall.style.position = 'static';
-  wall.style.background = 'none';
+  var modal = main.querySelector('#consent-banner-modal');
+  var settings = main.querySelector('#consent-banner-settings');
+  modal.close();
+  settings.close();
 }
 
 function showModal(main) {
-  main.style.display = 'block';
-  main.querySelector('#consent-banner-modal').style.display = 'block';
-}
-
-function hideModal(main) {
-  main.style.display = 'block';
-  main.querySelector('#consent-banner-modal').style.display = 'none';
-}
-
-function showSettings(main) {
-  main.style.display = 'block';
-  main.querySelector('#consent-banner-settings').style.display = 'block';
-  showWall(main)
-}
-
-function hideSettings(main) {
-  main.style.display = 'block';
-  main.querySelector('#consent-banner-settings').style.display = 'none';
-  if ('true' !== main.getAttribute('data-wall') || isConsentStateProvided(loadConsentState())) {
-    hideWall(main);
+  var modal = main.querySelector('#consent-banner-modal');
+  if (main.getAttribute('data-mode') === 'bar' && main.getAttribute('data-wall') !== 'true') {
+    modal.show();
+  } else {
+    modal.showModal();
   }
 }
 
+function hideModal(main) {
+  var modal = main.querySelector('#consent-banner-modal');
+  modal.close();
+}
+
+function showSettings(main) {
+  var settings = main.querySelector('#consent-banner-settings');
+  settings.showModal();
+}
+
+function hideSettings(main) {
+  var settings = main.querySelector('#consent-banner-settings');
+  settings.close();
+}
 
 function consentBannerJsMain(config) {
   var body = document.querySelector('body');
@@ -242,17 +195,14 @@ function consentBannerJsMain(config) {
 
   // create all components
   var main = createMain(config);
-  var wall = createWall(config);
   var modal = createModal(config);
   var settings = createSettings(config, existingConsentState);
 
-  main.appendChild(wall);
-  wall.appendChild(modal);
-  wall.appendChild(settings);
-
+  main.appendChild(modal);
+  main.appendChild(settings);
 
   // apply actions
-  addEventListener(settings.querySelector('[href="#accept"]'), 'click', function(ev) {
+  addEventListener(main.querySelectorAll('[href="#accept"]'), 'click', function(ev) {
     ev.preventDefault();
     var consentTypes = config.consent_types;
     var consentState = {};
@@ -266,21 +216,7 @@ function consentBannerJsMain(config) {
     dispatchBodyEvent('hidden');
   });
 
-  addEventListener(modal.querySelector('[href="#accept"]'), 'click', function(ev) {
-    ev.preventDefault();
-    var consentTypes = config.consent_types;
-    var consentState = {};
-    for (var key of Object.keys(consentTypes || {})) {
-      var consentTypeName = consentTypes[key].name;
-      consentState[consentTypeName] = 'granted';
-    }
-    updateSettings(settings, config, consentState);
-    saveConsentState(consentState);
-    hideMain(main);
-    dispatchBodyEvent('hidden');
-  });
-
-  addEventListener(settings.querySelector('[href="#close"]'), 'click', function(ev) {
+  addEventListener(settings.querySelectorAll('[href="#close"]'), 'click', function(ev) {
     ev.preventDefault();
     hideSettings(main);
     if (!isConsentStateProvided(loadConsentState())) {
@@ -297,7 +233,7 @@ function consentBannerJsMain(config) {
     dispatchBodyEvent('shown');
   });
 
-  addEventListener(modal.querySelector('[href="#reject"]'),'click', function(ev) {
+  addEventListener(main.querySelectorAll('[href="#reject"]'),'click', function(ev) {
     ev.preventDefault();
     var consentTypes = config.consent_types;
     var consentState = {};
@@ -310,21 +246,6 @@ function consentBannerJsMain(config) {
     hideMain(main);
     dispatchBodyEvent('hidden');
   });
-
-  addEventListener(settings.querySelector('[href="#reject"]'), 'click', function(ev) {
-    ev.preventDefault();
-    var consentTypes = config.consent_types;
-    var consentState = {};
-    for (var key of Object.keys(consentTypes || {})) {
-      var consentTypeName = consentTypes[key].name;
-      consentState[consentTypeName] = 'denied';
-    }
-    saveConsentState(consentState);
-    updateSettings(settings, config, consentState);
-    hideMain(main);
-    dispatchBodyEvent('hidden');
-  });
-
 
   addEventListener(settings.querySelector('[href="#save"]'), 'click', function(ev) {
     ev.preventDefault();
@@ -335,7 +256,7 @@ function consentBannerJsMain(config) {
     ev.preventDefault();
     const formData = new FormData(ev.target);
 
-    consentState = Object.fromEntries(formData);
+    const consentState = Object.fromEntries(formData);
     saveConsentState(consentState);
     updateSettings(settings, config, consentState);
     hideMain(main);
@@ -359,48 +280,11 @@ function consentBannerJsMain(config) {
   body.appendChild(main);
 
   if (true !== isConsentStateProvided(existingConsentState)) {
-    if (true === config.display.wall) {
-      showWall(main);
-    }
-
-    if ('bar' === config.display.mode) {
-      applyStyles(modal, {
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        'border-bottom': 'none',
-        'border-left': 'none',
-        'border-right': 'none',
-        'padding': '5px'
-      });
-      applyStyles(modal.querySelector('h2'), {
-        display: 'none'
-      });
-
-      applyStyles(modal.querySelector('.consent-banner-modal-buttons'), {
-        'margin-left': '20px'
-      });
-      showModal(main);
-      dispatchBodyEvent('shown');
-    }
-
-    if ('modal' === config.display.mode) {
-      applyStyles(modal, {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      });
-      applyStyles(modal.querySelector('.consent-banner-modal-wrapper'), {
-        display: 'block'
-      });
-      showModal(main);
-      dispatchBodyEvent('shown');
-    }
-
     if ('settings' === config.display.mode) {
       showSettings(main);
+      dispatchBodyEvent('shown');
+    } else {
+      showModal(main);
       dispatchBodyEvent('shown');
     }
   }
@@ -410,7 +294,7 @@ function consentBannerJsMain(config) {
 window.cookiesBannerJs = function(overrideLoadConsentState, overrideSaveConsentState, config) {
   loadConsentState = overrideLoadConsentState;
   saveConsentState = overrideSaveConsentState;
-  ready(consentBannerJsMain.bind(null, config));
+  consentBannerJsMain(config);
 }
 
 window.dispatchEvent(new CustomEvent('consent-banner.ready'));

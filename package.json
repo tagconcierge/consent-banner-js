@@ -1,20 +1,26 @@
 {
   "name": "@tagconcierge/consent-banner",
-  "version": "1.2.3",
+  "version": "2.0.0",
   "description": "A zero-dependency, lightweight (~3kB), consent platform agnostic, cookie banner for any website.",
   "main": "src/app.js",
-  "keywords": ["consent banner", "consent mode", "gtm consent", "cookie banner"],
+  "keywords": [
+    "consent banner",
+    "consent mode",
+    "gtm consent",
+    "cookie banner"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "esbuild src/app.js --outdir=www/js --bundle --servedir=www --target=es6",
-    "build": "rimraf dist; esbuild src/app.js --outfile=dist/consent-banner-js/$npm_package_version/consent-banner.min.js --bundle  --target=es6 --minify; cpr styles/ dist/consent-banner-js/$npm_package_version/styles; node bundle.js; esbuild dist/bundle.js --outfile=dist/consent-banner-js/$npm_package_version/consent-banner.bundle.min.js --bundle  --target=es6 --minify"
+    "build": "rimraf dist; esbuild src/app.js --outfile=dist/consent-banner-js/$npm_package_version/cb.min.js --bundle  --target=es6 --minify; mkdir -p dist/consent-banner-js/$npm_package_version/styles; uglifycss styles/light.css > dist/consent-banner-js/$npm_package_version/styles/light.min.css; node bundle.js; esbuild dist/bundle.js --outfile=dist/consent-banner-js/$npm_package_version/cb.bundle.min.js --bundle  --target=es6 --minify"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "cpr": "^3.0.1",
     "esbuild": "0.19.7",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "uglifycss": "^0.0.29"
   },
   "repository": {
     "type": "git",
