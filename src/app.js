@@ -1,17 +1,4 @@
 // Utilities
-function ready(fn) {
-  if (document.readyState != 'loading') {
-    fn();
-  } else if (document.addEventListener) {
-    document.addEventListener('DOMContentLoaded', fn);
-  } else {
-    document.attachEvent('onreadystatechange', function() {
-      if (document.readyState != 'loading')
-        fn();
-    });
-  }
-}
-
 function applySimpleMarkdown(text) {
   return (text || '')
     .replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>')
@@ -308,14 +295,10 @@ function consentBannerJsMain(config) {
 
 }
 
-window.cookiesBannerJs = function(overrideLoadConsentState, overrideSaveConsentState, config, disableDomReadyHandler = false) {
+window.cookiesBannerJs = function(overrideLoadConsentState, overrideSaveConsentState, config) {
   loadConsentState = overrideLoadConsentState;
   saveConsentState = overrideSaveConsentState;
-  if (false === disableDomReadyHandler) {
-    ready(consentBannerJsMain.bind(null, config));
-  } else {
-    consentBannerJsMain(config);
-  }
+  consentBannerJsMain(config);
 }
 
 window.dispatchEvent(new CustomEvent('consent-banner.ready'));

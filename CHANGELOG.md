@@ -4,6 +4,7 @@
 
 - switched to native `<dialog>` element to simplify the code
 - removed `<hx>` tags to avoid heading hierarchy issues for SEO reasons
+- removed `domReady` wrapper, now the library needs to be loaded in the body
 
 Breaking changes in custom styling selectors:
 

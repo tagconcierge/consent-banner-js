@@ -45,8 +45,6 @@ Or if you want to load the library script asynchronously, you can use the follow
 </script>
 ```
 
-**INFO:** You can call the `cookiesBannerJs` function whenever, wherever you want, inside it is wrapped with DOM Ready thingy.
-
 To make that work you need to prepare **three** things:
 
 1. A **function to load the consent state from somewhere**, for instance `localStorage` (see [examples](#examples))
