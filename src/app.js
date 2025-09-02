@@ -180,11 +180,7 @@ function hideModal(main) {
 
 function showSettings(main) {
   var settings = main.querySelector('#consent-banner-settings');
-  if (main.getAttribute('data-mode') === 'bar' && main.getAttribute('data-wall') !== 'true') {
-    settings.show();
-  } else {
-    settings.showModal();
-  }
+  settings.showModal();
 }
 
 function hideSettings(main) {

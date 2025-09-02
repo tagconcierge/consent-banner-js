@@ -15,13 +15,13 @@
 
 First, include simple CSS for the banner in the `<head>` of the page:
 ```html
-<link rel="stylesheet" href="https://public-assets.tagconcierge.com/consent-banner/2.0.0/styles/light.css" />
+<link rel="stylesheet" href="https://public-assets.tagconcierge.com/consent-banner/2.0.0/styles/light.min.css" />
 ```
 
 Then in the footer you can include the actual JS:
 
 ```html
-<script src="https://public-assets.tagconcierge.com/consent-banner/2.0.0/cb.min.js" integrity="sha384-zXUdInIfEJI2FEImKEFc2cmja+Jn7TViSXzqt6OhABX0jMgz6Mctrc864uJaN5PX" crossorigin="anonymous"></script>
+<script src="https://public-assets.tagconcierge.com/consent-banner/2.0.0/cb.min.js" integrity="sha384-SaQdLjgl+PMm2wQ2ykTBJJPCvvbKg2p5vfDT9wniUz2S5qqoxZ1Yp5vTctw3BZ0R" crossorigin="anonymous"></script>
 <script>
     cookiesBannerJs(
         loadConsentState,
@@ -33,7 +33,7 @@ Then in the footer you can include the actual JS:
 
 Or if you want to load the library script asynchronously, you can use the following `consent-banner.ready` event listener, which will execute the function only when the library is loaded:
 ```html
-<script defer src="https://public-assets.tagconcierge.com/consent-banner/2.0.0/cb.min.js" integrity="sha384-zXUdInIfEJI2FEImKEFc2cmja+Jn7TViSXzqt6OhABX0jMgz6Mctrc864uJaN5PX" crossorigin="anonymous"></script>
+<script defer src="https://public-assets.tagconcierge.com/consent-banner/2.0.0/cb.min.js" integrity="sha384-SaQdLjgl+PMm2wQ2ykTBJJPCvvbKg2p5vfDT9wniUz2S5qqoxZ1Yp5vTctw3BZ0R" crossorigin="anonymous"></script>
 <script>
     window.addEventListener('consent-banner.ready', () => {
         cookiesBannerJs(
